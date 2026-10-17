@@ -1,0 +1,39 @@
+{
+  "n_rows": 12590,
+  "by_split": {
+    "train": 7468,
+    "test": 3244,
+    "validation": 1878
+  },
+  "outcome_label_counts": {
+    "overdue_unresolved": 6312,
+    "completed": 4040,
+    "unverified": 1784,
+    "censored_or_unknown": 454
+  },
+  "binary_counts": {
+    "train": {
+      "1": 3732,
+      "0": 2384
+    },
+    "validation": {
+      "1": 1002,
+      "0": 558
+    },
+    "test": {
+      "1": 1578,
+      "0": 1098
+    }
+  },
+  "categories": {
+    "followup_review": 5924,
+    "patient_communication": 4270,
+    "medication_action": 989,
+    "appointment_referral": 683,
+    "laboratory_test": 292,
+    "imaging": 275,
+    "procedure": 135,
+    "other_action": 22
+  },
+  "n_open_excluded_already_complete_at_assessment": 4885
+}

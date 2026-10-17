@@ -1,0 +1,234 @@
+{
+  "mode": "fast",
+  "checks": {
+    "schema_interim": {
+      "ok": true,
+      "detail": "all required columns present"
+    },
+    "schema_risk_features": {
+      "ok": true,
+      "detail": "42 features + meta/labels present"
+    },
+    "schema_action": {
+      "ok": true,
+      "detail": "text/labels/tier/method/group present"
+    },
+    "schema_noshow": {
+      "ok": true,
+      "detail": "appointment columns present"
+    },
+    "missing_required": {
+      "ok": true,
+      "detail": "no nulls in required columns"
+    },
+    "unique_primary_keys": {
+      "ok": true,
+      "detail": {
+        "obligations": 0,
+        "events": 0,
+        "patients": 0,
+        "action": 0,
+        "noshow": 0,
+        "nodes": 0,
+        "edges": 0
+      }
+    },
+    "foreign_keys": {
+      "ok": true,
+      "detail": {
+        "obligations->patients": 0,
+        "events->obligations": 0,
+        "depends_on->obligations": 0,
+        "encounters->patients": 0,
+        "edges->nodes": 0,
+        "risk->obligations": 0
+      }
+    },
+    "split_assignment_consistent": {
+      "ok": true,
+      "detail": {
+        "obligations": 0,
+        "risk_train": 0,
+        "action_train": 0,
+        "risk_validation": 0,
+        "action_validation": 0,
+        "risk_test": 0,
+        "action_test": 0
+      }
+    },
+    "patient_level_independence": {
+      "ok": true,
+      "detail": {
+        "action": 0,
+        "noshow_patients": 0,
+        "risk": 0
+      }
+    },
+    "sh_heldout_only_in_test": {
+      "ok": true,
+      "detail": "268 held-out Synthetic Hospital patients are test-only"
+    },
+    "action_exact_duplicates_across_splits": {
+      "ok": true,
+      "detail": "no normalized sentence appears in >1 split"
+    },
+    "assessment_before_deadline": {
+      "ok": true,
+      "detail": "assessment_time < deadline for every risk row"
+    },
+    "no_completed_obligation_at_assessment": {
+      "ok": true,
+      "detail": "0 risk rows already had completion evidence at assessment time"
+    },
+    "no_forbidden_feature_columns": {
+      "ok": true,
+      "detail": "no generator flags / final status / future timestamps among features"
+    },
+    "dependency_graph_acyclic": {
+      "ok": true,
+      "detail": "24226 obligations / 15394 dependency edges"
+    }
+  },
+  "hard_failures": [],
+  "warnings": [
+    "no human-reviewed (gold) action labels: extraction/classification metrics against silver or developer-written sets are NOT clinical accuracy"
+  ],
+  "label_provenance": {
+    "action_label_tiers": {
+      "silver": 10002
+    },
+    "action_label_methods": {
+      "rule_v1_negative_default": 6622,
+      "rule_v1": 2295,
+      "rule_v1_negative_historical": 626,
+      "synthea_template_rule": 459
+    },
+    "action_sources": {
+      "aci_bench": 3583,
+      "synthetic_hospital": 3043,
+      "mts_dialog": 2917,
+      "synthea": 459
+    },
+    "synthetic_template_examples(train-only)": 622,
+    "risk_labels": "SIMULATED follow-up outcomes (generated scenarios); not clinically verified",
+    "noshow_labels": "REAL appointment attendance (Kaggle, de-identified); not follow-up completion",
+    "gold_human_reviewed_action_labels": 0
+  },
+  "class_balance": {
+    "action": {
+      "train": {
+        "appointment_referral": 101,
+        "laboratory_test": 107,
+        "imaging": 94,
+        "procedure": 93,
+        "medication_action": 500,
+        "patient_communication": 94,
+        "followup_review": 107,
+        "other_action": 81,
+        "no_action": 4532
+      },
+      "validation": {
+        "appointment_referral": 35,
+        "laboratory_test": 21,
+        "imaging": 17,
+        "procedure": 25,
+        "medication_action": 103,
+        "patient_communication": 29,
+        "followup_review": 30,
+        "other_action": 26,
+        "no_action": 724
+      },
+      "test": {
+        "appointment_referral": 122,
+        "laboratory_test": 120,
+        "imaging": 59,
+        "procedure": 53,
+        "medication_action": 469,
+        "patient_communication": 128,
+        "followup_review": 179,
+        "other_action": 89,
+        "no_action": 2283
+      }
+    },
+    "risk_binary": {
+      "train": {
+        "1": 3732,
+        "0": 2384
+      },
+      "validation": {
+        "1": 1002,
+        "0": 558
+      },
+      "test": {
+        "1": 1578,
+        "0": 1098
+      }
+    },
+    "risk_outcomes": {
+      "train": {
+        "overdue_unresolved": 3732,
+        "completed": 2384,
+        "unverified": 1072,
+        "censored_or_unknown": 280
+      },
+      "validation": {
+        "overdue_unresolved": 1002,
+        "completed": 558,
+        "unverified": 246,
+        "censored_or_unknown": 72
+      },
+      "test": {
+        "overdue_unresolved": 1578,
+        "completed": 1098,
+        "unverified": 466,
+        "censored_or_unknown": 102
+      }
+    },
+    "noshow": {
+      "train": {
+        "n": 77554,
+        "rate": 0.2017
+      },
+      "validation": {
+        "n": 16496,
+        "rate": 0.2022
+      },
+      "test": {
+        "n": 16471,
+        "rate": 0.2027
+      }
+    }
+  },
+  "source_parquet_checksums_recorded": 32,
+  "counts": {
+    "patients": 3284,
+    "encounters": 11173,
+    "obligations": 24296,
+    "events": 34441,
+    "risk_rows": 12590,
+    "action_examples": 10002,
+    "noshow_rows": 110521,
+    "graph_nodes": 103627,
+    "graph_edges": 223925
+  },
+  "data_files_sha256": {
+    "data/source/dataset_pipeline_src.tar.gz": "c7aee922ed6c51088cbfd2f9ee617dfb726a41e001e58ee437a7265abec8559c",
+    "data/source/interim/encounters.csv.gz": "c71390fec68269632a846eb208e5cffc29bc463514a8d659c76d4db0c6601fc0",
+    "data/source/interim/events.csv.gz": "a1a9a6d6e32da38e91de6db2e83c95b735328024474afc925e8fd3527430f31a",
+    "data/source/interim/evidence_links.csv.gz": "f9e124d9775f02829b3b8b8d6d4268f8b140d8ac7873511f5923781d7cce4602",
+    "data/source/interim/ground_truth.csv.gz": "9b64710a26cfaa788e5a33bc25745cca15ca7f80af916c1239e7afc0204de994",
+    "data/source/interim/obligations.csv.gz": "039af76d91e4b73c91de227c38b892fb0a7fc352a2b81bd93ee464727d33d617",
+    "data/source/interim/patients.csv.gz": "8a52fb7329988b81691ff32d6d39a6848319f3ad86deb97c2c5165dbf0a5f3b4",
+    "data/source/processed/action_classification/synthetic_train_augmentation.csv.gz": "1c8734b434d0425619f74849c30a3f05d103dec4de5700baed24cd166c6e8778",
+    "data/source/processed/action_classification/test.csv.gz": "a9da8b0e94ed0064a4db1968e47a10fb5853e9756b66f4c2c1c381c0731baef3",
+    "data/source/processed/action_classification/train.csv.gz": "45b2510d9fda25b5fd695e253264629d45f56b1fbdf98cd41a5ef6e00e453d00",
+    "data/source/processed/action_classification/validation.csv.gz": "231908f378e3ea2c944a1c7633d7a3e61521294c780dff195f1eac0fcbb2d83c",
+    "data/source/processed/appointment_noshow/all.csv.gz": "615367652bbea2ceb82fbb6841a78ee5697af183c8cf977a2294547d05ff3c00",
+    "data/source/processed/evidence_graph/edges.csv.gz": "f1c3f4e233d0471d97a875cfcc22ba0f791b92dacdb13d9ec3bcdc59136f3283",
+    "data/source/processed/evidence_graph/nodes.csv.gz": "0bdcf9fae89d81e7b688c58653d6e3db6e7a300b7a28b2d87eb2125902e3d8ae",
+    "data/source/processed/followup_risk/features_test.csv.gz": "32dcad97bb1281c435c87061b910e545b325a24b10185e68139ebf4c4cfcce46",
+    "data/source/processed/followup_risk/features_train.csv.gz": "b405a69587f6f670db5e8a23f9106369af8c538f8d7dcb16bd3608dc2687c2bd",
+    "data/source/processed/followup_risk/features_validation.csv.gz": "6b87d23460195e9638efc6459d719ccb4961908cfbd7ad5143ad576048bef2ad",
+    "data/source/processed/followup_risk/ground_truth_hidden.csv.gz": "feb112f1cf1cb92d7baa77b6a9dc632e8e5b200ebf978d522d2da23287725017"
+  }
+}

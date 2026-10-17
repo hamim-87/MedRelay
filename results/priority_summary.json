@@ -1,0 +1,41 @@
+{
+  "tuned_weights": {
+    "risk": 0.555799731146531,
+    "urgency": 0.30728011688474305,
+    "unresolved_dependencies": 0.0918458738711697,
+    "evidence_incomplete": 0.029400296944806264,
+    "importance": 0.01567398115275003
+  },
+  "learned_coefficients": {
+    "risk": 3.8038915673319886,
+    "urgency": 2.439373730758405,
+    "unresolved_dependencies": 0.21828808302268785,
+    "evidence_incomplete": 0.31352526361517297,
+    "importance": -0.4567675101349454
+  },
+  "paired": {
+    "weighted (tuned on validation) - risk_only": {
+      "diff": 0.004998586435676855,
+      "lo": -0.006171603273160917,
+      "hi": 0.01663700197183839,
+      "p_diff_le_0": 0.24,
+      "n_boot": 100
+    },
+    "learned logistic combination - risk_only": {
+      "diff": -0.007252578980765145,
+      "lo": -0.029584376783466457,
+      "hi": 0.01296370989221534,
+      "p_diff_le_0": 0.77,
+      "n_boot": 100
+    },
+    "deadline_only (urgency) - risk_only": {
+      "diff": -0.08302809736181005,
+      "lo": -0.11878774509941704,
+      "hi": -0.051624638596279936,
+      "p_diff_le_0": 1.0,
+      "n_boot": 100
+    }
+  },
+  "search_budget": 300,
+  "note": "importance = simulated workflow-definition weights (not clinical severity); weights/coefficients fitted on validation only"
+}

@@ -1,0 +1,8 @@
+result,measured value
+Action classification (silver labels),svm macro-F1 0.707 / micro-F1 0.849 (test); developer-annotated spans: accuracy 0.288
+Follow-up risk (simulated outcomes),"best graph model xgboost/C_graph: PR-AUC 0.830 [0.778,0.889], ROC-AUC 0.763, Brier 0.194, ECE 0.051; independent-task xgboost/B_independent: PR-AUC 0.820"
+"No-show (real data, secondary)","hgb/with_demographics: PR-AUC 0.354 (prevalence 0.201), ROC-AUC 0.736, ECE 0.016"
+GenAI extraction (350M),typed F1 B/C2/E on challenge set: 0.38 / 0.43 / 0.70; rules A 0.74
+"Early warning (>=24h lead, recall target 0.7 on val)","A_reminder_24h: recall 1.00, FAR 0.12, lead 24h | A_deadline_only: recall 1.00, FAR 0.19, lead 36h | B_independent_ml: recall 0.80, FAR 0.10, lead 24h | C_graph_ml: recall 0.74, FAR 0.07, lead 72h"
+State correctness at t*,engine 0.903 (final after reconciliation 0.997) vs naive absence=failure 0.884
+Throughput (best config),19254 events/s on s390x (2 vCPU)

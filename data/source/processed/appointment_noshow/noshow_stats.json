@@ -1,0 +1,191 @@
+{
+  "audit": {
+    "source_rows": 110527,
+    "duplicate_rows_excluding_ids": 618,
+    "duplicate_appointment_ids": 0,
+    "appointment_time_of_day_available": false,
+    "negative_wait_rows": 5,
+    "negative_age_rows": 1,
+    "age_gt_110_rows": 5,
+    "missing_values": {},
+    "handicap_levels": {
+      "0": 108286,
+      "1": 2042,
+      "2": 183,
+      "3": 13,
+      "4": 3
+    },
+    "dropped_invalid_rows": 6
+  },
+  "n_rows": 110521,
+  "no_show_rate": 0.2019,
+  "by_split_patient_grouped": {
+    "test": {
+      "n": 16471,
+      "no_show_rate": 0.2027
+    },
+    "train": {
+      "n": 77554,
+      "no_show_rate": 0.2017
+    },
+    "validation": {
+      "n": 16496,
+      "no_show_rate": 0.2022
+    }
+  },
+  "by_split_chronological": {
+    "test": {
+      "n": 16579,
+      "no_show_rate": 0.1836
+    },
+    "train": {
+      "n": 77364,
+      "no_show_rate": 0.2091
+    },
+    "validation": {
+      "n": 16578,
+      "no_show_rate": 0.1865
+    }
+  },
+  "patients": 62298,
+  "patients_spanning_multiple_splits_patient_grouped": 0,
+  "subgroups": {
+    "gender": {
+      "F": {
+        "n": 71836,
+        "no_show_rate": 0.2031
+      },
+      "M": {
+        "n": 38685,
+        "no_show_rate": 0.1996
+      }
+    },
+    "age_band": {
+      "0-17": {
+        "n": 27378,
+        "no_show_rate": 0.219
+      },
+      "18-34": {
+        "n": 24244,
+        "no_show_rate": 0.2397
+      },
+      "35-49": {
+        "n": 21864,
+        "no_show_rate": 0.2053
+      },
+      "50-64": {
+        "n": 22634,
+        "no_show_rate": 0.1672
+      },
+      "65+": {
+        "n": 14401,
+        "no_show_rate": 0.155
+      }
+    },
+    "scholarship": {
+      "0": {
+        "n": 99660,
+        "no_show_rate": 0.198
+      },
+      "1": {
+        "n": 10861,
+        "no_show_rate": 0.2374
+      }
+    },
+    "handicap_level": {
+      "0": {
+        "n": 108282,
+        "no_show_rate": 0.2023
+      },
+      "1": {
+        "n": 2040,
+        "no_show_rate": 0.1784
+      },
+      "2": {
+        "n": 183,
+        "no_show_rate": 0.2022
+      },
+      "3": {
+        "n": 13,
+        "no_show_rate": 0.2308
+      },
+      "4": {
+        "n": 3,
+        "no_show_rate": 0.3333
+      }
+    },
+    "hypertension": {
+      "0": {
+        "n": 88720,
+        "no_show_rate": 0.209
+      },
+      "1": {
+        "n": 21801,
+        "no_show_rate": 0.173
+      }
+    },
+    "diabetes": {
+      "0": {
+        "n": 102578,
+        "no_show_rate": 0.2036
+      },
+      "1": {
+        "n": 7943,
+        "no_show_rate": 0.18
+      }
+    },
+    "wait_band": {
+      "(-1, 0]": {
+        "n": 38562,
+        "no_show_rate": 0.0465
+      },
+      "(0, 3]": {
+        "n": 14675,
+        "no_show_rate": 0.2289
+      },
+      "(14, 30]": {
+        "n": 17371,
+        "no_show_rate": 0.3259
+      },
+      "(3, 7]": {
+        "n": 17510,
+        "no_show_rate": 0.252
+      },
+      "(30, 400]": {
+        "n": 10378,
+        "no_show_rate": 0.33
+      },
+      "(7, 14]": {
+        "n": 12025,
+        "no_show_rate": 0.3047
+      }
+    },
+    "neighbourhood_summary": {
+      "n_neighbourhoods": 81,
+      "n_with_lt_100_rows": 7,
+      "no_show_rate_min": 0.1456,
+      "no_show_rate_max": 0.2892
+    }
+  },
+  "features": [
+    "age",
+    "gender",
+    "scholarship",
+    "hypertension",
+    "diabetes",
+    "alcoholism",
+    "handicap_level",
+    "neighbourhood",
+    "wait_days",
+    "same_day",
+    "scheduled_dow",
+    "scheduled_hour",
+    "appointment_dow",
+    "prior_appointments",
+    "prior_noshows",
+    "prior_noshow_rate",
+    "days_since_last_appointment"
+  ],
+  "split_strategy": "primary: patient-grouped hash 70/15/15 (column split); secondary: chronological by appointment date (column split_chrono)",
+  "cutoff": "ScheduledDay (time the appointment is scheduled)"
+}

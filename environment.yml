@@ -1,0 +1,28 @@
+# Equivalent conda-style description (the reference run used apt + venv, see docs/linuxone_setup.md). Do NOT install x86_64 wheels on s390x.
+name: medrelay-linuxone
+channels: [conda-forge]
+dependencies:
+  - python=3.12
+  - numpy=1.26
+  - pandas=2.1
+  - scipy
+  - scikit-learn=1.4
+  - xgboost=2.0
+  - networkx
+  - matplotlib
+  - plotly
+  - ipywidgets
+  - nbclient
+  - nbformat
+  - ipykernel
+  - jupyterlab
+  - pydantic>=2
+  - pyyaml
+  - psutil
+  - joblib
+  - pytest
+  - pip
+  - pip:
+      - llama-cpp-python==0.3.36   # compile for s390x (see docs/linuxone_setup.md)
+      - huggingface_hub
+      - gguf

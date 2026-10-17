@@ -1,0 +1,31 @@
+{
+  "n_nodes": 103627,
+  "n_edges": 223925,
+  "nodes_by_type": {
+    "ClinicalEvent": 34441,
+    "EvidenceRecord": 34441,
+    "ClinicalObligation": 24296,
+    "Encounter": 6145,
+    "ClinicalNote": 2631,
+    "Patient": 1665,
+    "ResponsibleRole": 8
+  },
+  "edges_by_type": {
+    "BELONGS_TO": 67513,
+    "EXTRACTED_FROM": 58737,
+    "EVIDENCED_BY": 34610,
+    "ASSIGNED_TO": 24296,
+    "COMPLETED_BY": 17518,
+    "DEPENDS_ON": 15394,
+    "REQUIRES_REVIEW": 5324,
+    "CONTRADICTS": 533
+  },
+  "edges_by_provenance": {
+    "simulated": 154990,
+    "documented_source": 63165,
+    "extracted_rule": 5601,
+    "inferred": 169
+  },
+  "inferred_visit_evidence_edges": 169,
+  "dangling_edges_dropped": 0
+}

@@ -1,0 +1,59 @@
+project: medrelay-linuxone
+seed: 20261017
+mode: fast                    # fast = development subset, full = every available record (override: env MEDRELAY_MODE)
+paths:
+  source: data/source         # uploaded outputs of the dataset-engineering pipeline (gzip CSV; pyarrow has no s390x wheel)
+  processed: data/processed   # files derived on this machine (enriched event stream, manifests)
+  models: models
+  results: results
+  figures: figures
+  reports: reports
+  db: results/medrelay_state.sqlite
+data:
+  fast: {patients_per_split: {train: 150, validation: 50, test: 80}}
+  full: {patients_per_split: null}
+stream:                       # delivery imperfections injected when the replay stream is built (deterministic)
+  late_p: 0.06
+  dup_p: 0.03
+  late_obligation_p: 0.03
+  late_hours: [2, 120]
+engine:
+  grace_hours: 12             # after a deadline, wait this long for late evidence before calling a task unverified
+  commit_every: 200           # SQLite transaction batch (events); 1 = commit per event
+  rescore_batch: 256
+llm:
+  models_dir: models/llm
+  primary: granite-4.0-350m-Q8_0.gguf
+  large: granite-4.0-1b-Q4_0.gguf
+  n_ctx: 2048
+  n_threads: 2
+  max_tokens: 500
+  temperature: 0.0
+  max_retries: 2
+  allow_remote: false         # remote LLMs are disabled; synthetic data only, and only if explicitly authorised
+risk:
+  models: [logreg, hgb, rf, xgboost]
+alerts:
+  risk_threshold: 0.7
+  hours_to_deadline_for_risk_alert: 72
+  unacknowledged_hours: 24
+benchmarks:
+  fast: {event_workloads: [1000, 5000], repeats: 2}
+  full: {event_workloads: [1000, 10000, 100000], repeats: 3}
+experiments:
+  fast:
+    tuning_budget: 3          # random-search configurations per model family (train -> validation only)
+    action_budget: 3
+    bootstrap: 100            # patient-grouped bootstrap resamples
+    llm_docs: {challenge: 12, template: 12}
+    llm_large_docs: {challenge: 6, template: 6}
+    replay_patients_per_split: {test: 60, validation: 40}
+    scenario_episodes: 24
+  full:
+    tuning_budget: 8
+    action_budget: 8
+    bootstrap: 300
+    llm_docs: {challenge: 40, template: 60}
+    llm_large_docs: {challenge: 20, template: 20}
+    replay_patients_per_split: null
+    scenario_episodes: 120

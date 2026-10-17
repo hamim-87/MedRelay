@@ -1,0 +1,322 @@
+{
+  "summary": {
+    "PASS": 20,
+    "WARN": 6
+  },
+  "checks": [
+    {
+      "id": "Q01",
+      "name": "missing required values",
+      "status": "PASS",
+      "detail": "all required columns complete in 10 tables; features NaN by design: {'hours_since_parent_completed': 0.416, 'appointment_minus_deadline_hours': 0.901}",
+      "group": "quality",
+      "metrics": {
+        "nullable_by_design_risk_features": {
+          "hours_since_parent_completed": 0.416,
+          "appointment_minus_deadline_hours": 0.901
+        }
+      }
+    },
+    {
+      "id": "Q02",
+      "name": "unique primary keys",
+      "status": "PASS",
+      "detail": "13 key sets unique",
+      "group": "quality",
+      "metrics": {}
+    },
+    {
+      "id": "Q16",
+      "name": "pydantic schema validation (obligations, events, evidence links)",
+      "status": "PASS",
+      "detail": "3000-row samples of each table satisfy the canonical schemas",
+      "group": "quality",
+      "metrics": {}
+    },
+    {
+      "id": "Q03",
+      "name": "valid foreign keys",
+      "status": "PASS",
+      "detail": "all FK relations resolve (incl. depends_on, edges, stream, risk)",
+      "group": "quality",
+      "metrics": {}
+    },
+    {
+      "id": "Q04",
+      "name": "chronological ordering",
+      "status": "PASS",
+      "detail": "deadlines, event times, dependency deadlines and stream ordering are consistent",
+      "group": "quality",
+      "metrics": {}
+    },
+    {
+      "id": "Q05",
+      "name": "impossible task transitions",
+      "status": "WARN",
+      "detail": "no hard violations; 139 child completions have a parent with NO documented completion and 8 visits have no documented scheduling event (by design: 'missing documentation' scenario; those parents are labelled unverified, not completed)",
+      "group": "quality",
+      "metrics": {
+        "child_completion_with_undocumented_parent": 139,
+        "visit_without_documented_scheduling": 8
+      }
+    },
+    {
+      "id": "Q06",
+      "name": "completion evidence before its cause",
+      "status": "PASS",
+      "detail": "no evidence precedes its cause",
+      "group": "quality",
+      "metrics": {}
+    },
+    {
+      "id": "Q07",
+      "name": "graph validity (cycles, edge types, no implied completion)",
+      "status": "PASS",
+      "detail": "no cycles/invalid edges; dependency depth histogram {1: 8902, 2: 8869, 3: 5864, 4: 441, 5: 195, 6: 25}",
+      "group": "quality",
+      "metrics": {
+        "depth_histogram": {
+          "1": 8902,
+          "2": 8869,
+          "3": 5864,
+          "4": 441,
+          "5": 195,
+          "6": 25
+        }
+      }
+    },
+    {
+      "id": "Q08",
+      "name": "contradictory labels",
+      "status": "PASS",
+      "detail": "outcome-vs-event inconsistencies: 0; action text groups with conflicting label sets: 2/290 duplicated-text groups (templated duplicates may legitimately differ by section context)",
+      "group": "quality",
+      "metrics": {
+        "conflicting_text_groups": 2,
+        "duplicated_text_groups": 290
+      }
+    },
+    {
+      "id": "Q09a",
+      "name": "action examples: exact/near duplicates across splits",
+      "status": "PASS",
+      "detail": "exact-duplicate texts spanning splits: 0; eval rows with cosine>=0.92 to a train row: 0 (excluded rows were removed before writing)",
+      "group": "leakage",
+      "metrics": {
+        "exact": 0,
+        "near": 0,
+        "max_cosine_p99": 0.8144794868999329
+      }
+    },
+    {
+      "id": "Q09b",
+      "name": "notes: identical note text across splits",
+      "status": "WARN",
+      "detail": "43 identical normalized note texts appear in more than one split (by source: {'aci_bench': 0, 'mts_dialog': 43, 'synthea': 0, 'synthetic_hospital': 0}); duplicated-text groups by source: {'aci_bench': 0, 'mts_dialog': 68, 'synthea': 0, 'synthetic_hospital': 0}. Synthea/MTS/ACI short or templated notes are expected to repeat; they are in the source as-is and splits are patient/official-level.",
+      "group": "leakage",
+      "metrics": {
+        "by_source": {
+          "aci_bench": 0,
+          "mts_dialog": 43,
+          "synthea": 0,
+          "synthetic_hospital": 0
+        }
+      }
+    },
+    {
+      "id": "Q09c",
+      "name": "no-show: duplicate rows spanning splits",
+      "status": "WARN",
+      "detail": "2 duplicate feature-vectors span splits (patient-grouped: same patient never in 2 splits)",
+      "group": "leakage",
+      "metrics": {}
+    },
+    {
+      "id": "Q09d",
+      "name": "cross-source sentence overlap (ACI/MTS/SH/Synthea)",
+      "status": "WARN",
+      "detail": "22 normalized sentences occur in >1 source dataset: {('aci_bench', 'mts_dialog'): 22}",
+      "group": "leakage",
+      "metrics": {}
+    },
+    {
+      "id": "L01",
+      "name": "future-information leakage (features vs events <= assessment time)",
+      "status": "PASS",
+      "detail": "features recomputed independently for 400 sampled rows match; no forbidden/generator columns; all rows open at assessment_time and assessment_time < deadline",
+      "group": "leakage",
+      "metrics": {}
+    },
+    {
+      "id": "L02",
+      "name": "no-show history features use only earlier appointments",
+      "status": "PASS",
+      "detail": "0/300 sampled rows mismatch brute-force recomputation",
+      "group": "leakage",
+      "metrics": {}
+    },
+    {
+      "id": "L03",
+      "name": "no-show: timing-uncertain column kept out of primary features",
+      "status": "PASS",
+      "detail": "['sms_received__timing_uncertain'] present only as clearly-labelled optional column",
+      "group": "leakage",
+      "metrics": {}
+    },
+    {
+      "id": "L04",
+      "name": "graph edges created after assessment time are excluded from snapshots",
+      "status": "PASS",
+      "detail": "0 sampled obligations have a COMPLETED_BY edge at/before assessment_time; 0 have an overdue-trigger review edge before assessment",
+      "group": "leakage",
+      "metrics": {}
+    },
+    {
+      "id": "L05",
+      "name": "patient-level split independence & reuse across all artefacts",
+      "status": "PASS",
+      "detail": "every patient has one split reused in notes/obligations/events/action/risk/graph/stream; no-show patients never span splits",
+      "group": "leakage",
+      "metrics": {}
+    },
+    {
+      "id": "Q13",
+      "name": "preservation of source-provided splits",
+      "status": "PASS",
+      "detail": "SH official splits kept ({'train': 800, 'heldout': 268, 'public': 200}), SH heldout only in test; MTS {'test1_mediqa_chat': 200, 'test2_mediqa_sum': 200, 'train': 1201, 'validation': 100}; ACI {'test1': 40, 'test2': 40, 'test3': 40, 'train': 67, 'valid': 20}",
+      "group": "quality",
+      "metrics": {}
+    },
+    {
+      "id": "L06",
+      "name": "SH held-out patients never appear in training files",
+      "status": "PASS",
+      "detail": "0 rows",
+      "group": "leakage",
+      "metrics": {}
+    },
+    {
+      "id": "Q11",
+      "name": "label distribution & class imbalance",
+      "status": "WARN",
+      "detail": "action classes with <30 examples: [('validation', 'laboratory_test', 21), ('validation', 'imaging', 17), ('validation', 'procedure', 25), ('validation', 'patient_communication', 29), ('validation', 'other_action', 26)] | gold-reviewed action examples = 0 (< 30): precision/recall against GENUINE reviewed labels cannot be computed | risk binary base rate (overdue) = 0.61: a simulation parameter (open-at-assessment population), NOT an epidemiological estimate | action 'no_action' share = 0.76 (heavy majority class)",
+      "group": "quality",
+      "metrics": {
+        "action_counts": {
+          "train": {
+            "appointment_referral": 101,
+            "laboratory_test": 107,
+            "imaging": 94,
+            "procedure": 93,
+            "medication_action": 500,
+            "patient_communication": 94,
+            "followup_review": 107,
+            "other_action": 81,
+            "no_action": 4532
+          },
+          "validation": {
+            "appointment_referral": 35,
+            "laboratory_test": 21,
+            "imaging": 17,
+            "procedure": 25,
+            "medication_action": 103,
+            "patient_communication": 29,
+            "followup_review": 30,
+            "other_action": 26,
+            "no_action": 724
+          },
+          "test": {
+            "appointment_referral": 122,
+            "laboratory_test": 120,
+            "imaging": 59,
+            "procedure": 53,
+            "medication_action": 469,
+            "patient_communication": 128,
+            "followup_review": 179,
+            "other_action": 89,
+            "no_action": 2283
+          }
+        },
+        "gold": 0
+      }
+    },
+    {
+      "id": "Q12",
+      "name": "synthetic scenario diversity",
+      "status": "WARN",
+      "detail": "11 behaviour profiles, normalised entropy 0.83; profiles per category {'appointment_referral': 11, 'imaging': 7, 'laboratory_test': 8, 'medication_action': 7, 'other_action': 5, 'patient_communication': 6}; category 'laboratory_test' dominates chains (0.57)",
+      "group": "quality",
+      "metrics": {
+        "profile_share": {
+          "timely": 0.3278,
+          "unacknowledged_result": 0.2088,
+          "late_completion": 0.1144,
+          "contacted_early": 0.0742,
+          "notification_failure": 0.0712,
+          "missing_documentation": 0.069,
+          "conflicting_evidence": 0.0496,
+          "upstream_failure": 0.0298,
+          "scheduled_pending": 0.022,
+          "missed_appointment": 0.0196,
+          "unscheduled_referral": 0.0137
+        },
+        "entropy": 0.825524455334667
+      }
+    },
+    {
+      "id": "Q14",
+      "name": "provenance completeness",
+      "status": "PASS",
+      "detail": "45 raw files have url/version/license/sha256 (re-verified on disk); all derived rows carry provenance",
+      "group": "quality",
+      "metrics": {}
+    },
+    {
+      "id": "Q15",
+      "name": "graph <-> event stream referential consistency (and no hidden fields in stream)",
+      "status": "PASS",
+      "detail": "34441 graph event nodes == stream logical events; 24296 obligations aligned; payloads contain no outcome/generator fields",
+      "group": "quality",
+      "metrics": {}
+    },
+    {
+      "id": "L07",
+      "name": "single-feature AUC scan for generator/template leakage",
+      "status": "PASS",
+      "detail": "max single-feature AUC (train+val) = 0.665 (elapsed_fraction); top5 [('elapsed_fraction', 0.665), ('parent_state', 0.616), ('n_incomplete_dependencies', 0.615), ('n_incomplete_ancestors', 0.614), ('hours_since_last_event', 0.604)]. Thresholds: >0.90 FAIL, >0.75 WARN. Note: events/features are produced by a seeded generator, so even a sub-threshold model score reflects the generator's causal structure, NOT real-world predictability.",
+      "group": "leakage",
+      "metrics": {
+        "top": [
+          [
+            "elapsed_fraction",
+            0.665
+          ],
+          [
+            "parent_state",
+            0.616
+          ],
+          [
+            "n_incomplete_dependencies",
+            0.615
+          ],
+          [
+            "n_incomplete_ancestors",
+            0.614
+          ],
+          [
+            "hours_since_last_event",
+            0.604
+          ]
+        ]
+      }
+    },
+    {
+      "id": "L08",
+      "name": "test split not used for tuning",
+      "status": "PASS",
+      "detail": "baseline_check recorded test_used_for_model_selection=False; hyper-parameters fixed a priori, validation only for early stopping",
+      "group": "leakage",
+      "metrics": {}
+    }
+  ]
+}

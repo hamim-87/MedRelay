@@ -1,0 +1,21 @@
+# secrets
+*.pem
+*.key
+id_*
+.env
+.ssh_local/
+# environments / caches
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+# large / regenerable artifacts
+models/llm/*.gguf
+models/llm/original_le/
+models/llm/.cache/
+data/processed/event_stream.jsonl.gz
+results/*.sqlite*
+results/bench_*.sqlite*
+scripts/nnpa_matmul_bench
+third_party/

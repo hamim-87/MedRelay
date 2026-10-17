@@ -1,0 +1,423 @@
+{
+  "mode": "full",
+  "seed": 20261017,
+  "total_source_records": {
+    "synthetic_hospital": {
+      "patients": 1268,
+      "encounters": 5602,
+      "notes": 5602,
+      "imaging_orders": 1865
+    },
+    "synthea_csv": {
+      "patients": 108,
+      "encounters": 5571,
+      "observations": 68648,
+      "medications": 3850,
+      "procedures": 15884,
+      "careplans": 349,
+      "fhir_document_reference_notes": 5635
+    },
+    "mts_dialog": {
+      "MTS-Dialog-TrainingSet": 1201,
+      "MTS-Dialog-ValidationSet": 100,
+      "MTS-Dialog-TestSet-1-MEDIQA-Chat-2023": 200,
+      "MTS-Dialog-TestSet-2-MEDIQA-Sum-2023": 200
+    },
+    "aci_bench": {
+      "train": 67,
+      "valid": 20,
+      "clinicalnlp_taskB_test1": 40,
+      "clinicalnlp_taskC_test2": 40,
+      "clef_taskC_test3": 40
+    },
+    "noshow": {
+      "rows": 110527
+    }
+  },
+  "canonical": {
+    "patients": {
+      "aci_bench": {
+        "test": 120,
+        "train": 67,
+        "validation": 20
+      },
+      "mts_dialog": {
+        "test": 400,
+        "train": 1201,
+        "validation": 100
+      },
+      "synthea": {
+        "test": 24,
+        "train": 72,
+        "validation": 12
+      },
+      "synthetic_hospital": {
+        "test": 268,
+        "train": 800,
+        "validation": 200
+      }
+    },
+    "encounters": {
+      "synthea": 5571,
+      "synthetic_hospital": 5602
+    },
+    "notes": {
+      "aci_bench:dialogue": 207,
+      "aci_bench:visit_note": 207,
+      "mts_dialog:dialogue": 1701,
+      "mts_dialog:section_summary": 1701,
+      "synthea:clinical_note": 5571,
+      "synthetic_hospital:clinical_note": 5602
+    },
+    "n_patients": 3284,
+    "n_encounters": 11173,
+    "n_notes": 14989,
+    "pseudo_patients_(document-level MTS/ACI)": 1908
+  },
+  "valid_records_after_cleaning": {
+    "noshow_rows": 110521,
+    "noshow_dropped_invalid": 6,
+    "action_examples_after_leakage_exclusion": 10002,
+    "action_examples_excluded_as_duplicates": 469
+  },
+  "action_classification": {
+    "counts_by_split": {
+      "train": 5634,
+      "test": 3382,
+      "validation": 986
+    },
+    "label_counts_by_split": {
+      "test": {
+        "appointment_referral": 122,
+        "laboratory_test": 120,
+        "imaging": 59,
+        "procedure": 53,
+        "medication_action": 469,
+        "patient_communication": 128,
+        "followup_review": 179,
+        "other_action": 89,
+        "no_action": 2283
+      },
+      "train": {
+        "appointment_referral": 101,
+        "laboratory_test": 107,
+        "imaging": 94,
+        "procedure": 93,
+        "medication_action": 500,
+        "patient_communication": 94,
+        "followup_review": 107,
+        "other_action": 81,
+        "no_action": 4532
+      },
+      "validation": {
+        "appointment_referral": 35,
+        "laboratory_test": 21,
+        "imaging": 17,
+        "procedure": 25,
+        "medication_action": 103,
+        "patient_communication": 29,
+        "followup_review": 30,
+        "other_action": 26,
+        "no_action": 724
+      }
+    },
+    "label_counts_total": {
+      "appointment_referral": 258,
+      "laboratory_test": 248,
+      "imaging": 170,
+      "procedure": 171,
+      "medication_action": 1072,
+      "patient_communication": 251,
+      "followup_review": 316,
+      "other_action": 196,
+      "no_action": 7539
+    },
+    "actionable_examples(any non no_action label)": 2463,
+    "positive_fraction_by_source": {
+      "aci_bench": 0.4222718392408596,
+      "mts_dialog": 0.10695920466232431,
+      "synthea": 0.3660130718954248,
+      "synthetic_hospital": 0.15445284258954978
+    },
+    "tier_counts": {
+      "silver": 10002
+    },
+    "gold_examples": 0,
+    "review_queue_size": 679,
+    "needs_review_rate": 0.0205,
+    "actionable_language_share_of_documents (rule-based candidates)": {
+      "synthetic_hospital_notes": 0.0795,
+      "mts_summaries": 0.0449,
+      "mts_doctor_turns": 0.0947,
+      "aci_notes": 0.9855,
+      "aci_doctor_turns": 0.8647
+    }
+  },
+  "obligations": {
+    "n_seeds": 9037,
+    "seeds_by_kind": {
+      "documented_lab_result": 4956,
+      "text_extracted": 1867,
+      "structured_order": 1865,
+      "documented_careplan": 349
+    },
+    "n_obligations_generated": 24296,
+    "n_non_documented_root_obligations": 17475,
+    "by_category": {
+      "followup_review": 8083,
+      "patient_communication": 5486,
+      "laboratory_test": 5434,
+      "imaging": 2181,
+      "medication_action": 1612,
+      "appointment_referral": 1317,
+      "procedure": 153,
+      "other_action": 30
+    },
+    "outcomes_all": {
+      "completed": 15461,
+      "overdue_unresolved": 6312,
+      "unverified": 2069,
+      "censored_or_unknown": 454
+    },
+    "outcomes_excluding_documented_roots": {
+      "completed": 8640,
+      "overdue_unresolved": 6312,
+      "unverified": 2069,
+      "censored_or_unknown": 454
+    },
+    "simulated_completed": 8640,
+    "simulated_missed(overdue_unresolved)": 6312,
+    "simulated_late_completion_within_overdue": 1524,
+    "pct_with_verified_completion_evidence_excl_roots": 61.21,
+    "pct_with_verified_completion_evidence_all": 72.1,
+    "n_chains": 9037,
+    "chain_length_distribution": {
+      "1": 70,
+      "2": 3128,
+      "3": 5515,
+      "4": 195,
+      "5": 129
+    },
+    "dependency_depth_distribution": {
+      "1": 8902,
+      "2": 8869,
+      "3": 5864,
+      "4": 441,
+      "5": 195,
+      "6": 25
+    },
+    "n_dependency_edges": 15394,
+    "n_cross_chain_dependency_edges": 135,
+    "scenario_profiles(non-root obligations)": {
+      "timely": 5729,
+      "unacknowledged_result": 3649,
+      "late_completion": 1999,
+      "contacted_early": 1296,
+      "notification_failure": 1244,
+      "missing_documentation": 1205,
+      "conflicting_evidence": 867,
+      "upstream_failure": 520,
+      "scheduled_pending": 384,
+      "missed_appointment": 342,
+      "unscheduled_referral": 240
+    },
+    "events": {
+      "n": 34441,
+      "by_provenance": {
+        "simulated": 25755,
+        "documented_source": 8686
+      }
+    }
+  },
+  "followup_risk": {
+    "rows": 12590,
+    "by_split": {
+      "train": 7468,
+      "test": 3244,
+      "validation": 1878
+    },
+    "outcome_label_counts": {
+      "overdue_unresolved": 6312,
+      "completed": 4040,
+      "unverified": 1784,
+      "censored_or_unknown": 454
+    },
+    "binary_counts": {
+      "train": {
+        "1": 3732,
+        "0": 2384
+      },
+      "validation": {
+        "1": 1002,
+        "0": 558
+      },
+      "test": {
+        "1": 1578,
+        "0": 1098
+      }
+    },
+    "categories": {
+      "followup_review": 5924,
+      "patient_communication": 4270,
+      "medication_action": 989,
+      "appointment_referral": 683,
+      "laboratory_test": 292,
+      "imaging": 275,
+      "procedure": 135,
+      "other_action": 22
+    },
+    "missing_rate_of_features_(NaN by design)": {
+      "hours_since_parent_completed": 0.4158,
+      "appointment_minus_deadline_hours": 0.9011
+    },
+    "unknown_label_rate(unverified+censored share)": 0.1778
+  },
+  "appointment_noshow": {
+    "n_rows": 110521,
+    "no_show_rate": 0.2019,
+    "by_split_patient_grouped": {
+      "test": {
+        "n": 16471,
+        "no_show_rate": 0.2027
+      },
+      "train": {
+        "n": 77554,
+        "no_show_rate": 0.2017
+      },
+      "validation": {
+        "n": 16496,
+        "no_show_rate": 0.2022
+      }
+    },
+    "by_split_chronological": {
+      "test": {
+        "n": 16579,
+        "no_show_rate": 0.1836
+      },
+      "train": {
+        "n": 77364,
+        "no_show_rate": 0.2091
+      },
+      "validation": {
+        "n": 16578,
+        "no_show_rate": 0.1865
+      }
+    },
+    "patients": 62298,
+    "split_strategy": "primary: patient-grouped hash 70/15/15 (column split); secondary: chronological by appointment date (column split_chrono)",
+    "cutoff": "ScheduledDay (time the appointment is scheduled)",
+    "audit": {
+      "source_rows": 110527,
+      "duplicate_rows_excluding_ids": 618,
+      "duplicate_appointment_ids": 0,
+      "appointment_time_of_day_available": false,
+      "negative_wait_rows": 5,
+      "negative_age_rows": 1,
+      "age_gt_110_rows": 5,
+      "missing_values": {},
+      "handicap_levels": {
+        "0": 108286,
+        "1": 2042,
+        "2": 183,
+        "3": 13,
+        "4": 3
+      },
+      "dropped_invalid_rows": 6
+    }
+  },
+  "evidence_graph": {
+    "n_nodes": 103627,
+    "n_edges": 223925,
+    "nodes_by_type": {
+      "ClinicalEvent": 34441,
+      "EvidenceRecord": 34441,
+      "ClinicalObligation": 24296,
+      "Encounter": 6145,
+      "ClinicalNote": 2631,
+      "Patient": 1665,
+      "ResponsibleRole": 8
+    },
+    "edges_by_type": {
+      "BELONGS_TO": 67513,
+      "EXTRACTED_FROM": 58737,
+      "EVIDENCED_BY": 34610,
+      "ASSIGNED_TO": 24296,
+      "COMPLETED_BY": 17518,
+      "DEPENDS_ON": 15394,
+      "REQUIRES_REVIEW": 5324,
+      "CONTRADICTS": 533
+    },
+    "edges_by_provenance": {
+      "simulated": 154990,
+      "documented_source": 63165,
+      "extracted_rule": 5601,
+      "inferred": 169
+    },
+    "inferred_visit_evidence_edges": 169,
+    "dangling_edges_dropped": 0
+  },
+  "event_stream": {
+    "n_deliveries": 90904,
+    "n_logical_events": 89049,
+    "by_type": {
+      "obligation_created": 24985,
+      "deadline_reached": 24296,
+      "result_opened": 7039,
+      "encounter_start": 6195,
+      "result_posted": 5250,
+      "task_status_snapshot": 4912,
+      "result_acknowledged": 4799,
+      "patient_notified": 3057,
+      "report_posted": 2026,
+      "imaging_order_documented": 1916,
+      "contact_attempt": 1263,
+      "appointment_scheduled": 901,
+      "reminder_sent": 755,
+      "medication_opened": 640,
+      "medication_dispensed": 618,
+      "conflicting_record": 549,
+      "medication_acknowledged": 472,
+      "visit_attended": 439,
+      "visit_no_show": 186,
+      "lab_collected": 172,
+      "appointment_rescheduled": 122,
+      "imaging_performed": 107,
+      "procedure_performed": 91,
+      "consult_report_received": 60,
+      "appointment_cancelled": 35,
+      "action_documented": 19
+    },
+    "n_late": 3157,
+    "n_duplicates": 1855,
+    "n_out_of_order_deliveries_per_obligation": 912,
+    "n_simulated_events": 65310,
+    "n_obligations_never_completed_in_stream": 6778,
+    "anomaly_rates_config": {
+      "late": 0.06,
+      "duplicate": 0.03,
+      "late_obligation_created": 0.03
+    }
+  },
+  "validation_summary": {
+    "PASS": 20,
+    "WARN": 6
+  },
+  "baselines": {
+    "followup_risk_test_pr_auc": {
+      "majority_class(train prior)": 0.5897,
+      "deadline_only_logreg": 0.7155,
+      "rule: overdue-now (hours_to_deadline<=0)": 0.5897,
+      "rule: any incomplete dependency": 0.6691,
+      "logreg_all_features": 0.819,
+      "logreg_all_features_validation": 0.8611,
+      "xgboost_all_features": 0.8401,
+      "xgboost_all_features_validation": 0.873
+    },
+    "noshow_test_pr_auc": {
+      "majority(prevalence)": 0.2027,
+      "logreg": 0.3333,
+      "xgboost": 0.365
+    },
+    "action_gold_available": 0
+  }
+}
