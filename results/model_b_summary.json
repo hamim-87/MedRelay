@@ -2,65 +2,65 @@
   "best_per_featureset": {
     "task_only": {
       "model": "rf/task_only",
-      "val_pr_auc": 0.8194199109560125
+      "val_pr_auc": 0.8722622475074185
     },
     "B_independent": {
-      "model": "xgboost/B_independent",
-      "val_pr_auc": 0.837060799600809
+      "model": "rf/B_independent",
+      "val_pr_auc": 0.8827282707802818
     },
     "C_graph": {
-      "model": "xgboost/C_graph",
-      "val_pr_auc": 0.866154322055589
+      "model": "rf/C_graph",
+      "val_pr_auc": 0.9128393422787853
     }
   },
   "paired_bootstrap": {
     "C_minus_B_pr_auc": {
-      "diff": 0.01029648899046276,
-      "lo": -0.0034313208289009464,
-      "hi": 0.02590126451064088,
-      "p_diff_le_0": 0.08,
-      "n_boot": 100
+      "diff": 0.04299603033415278,
+      "lo": 0.03751725437845421,
+      "hi": 0.04838295103488403,
+      "p_diff_le_0": 0.0,
+      "n_boot": 300
     },
     "C_minus_task_only_pr_auc": {
-      "diff": 0.038400579252702904,
-      "lo": 0.019074095322651616,
-      "hi": 0.06006453460190801,
+      "diff": 0.04964792217149039,
+      "lo": 0.044527723592703294,
+      "hi": 0.05512694839814974,
       "p_diff_le_0": 0.0,
-      "n_boot": 100
+      "n_boot": 300
     }
   },
   "precision_recall_at_thresholds_C": [
     {
       "threshold": 0.3,
-      "alerts": 1862,
-      "precision": 0.6133190118152524,
-      "recall": 0.926948051948052
+      "alerts": 18935,
+      "precision": 0.6477422762080802,
+      "recall": 0.9715621039290241
     },
     {
       "threshold": 0.5,
-      "alerts": 1287,
-      "precision": 0.7319347319347319,
-      "recall": 0.7646103896103896
+      "alerts": 13218,
+      "precision": 0.7794673929490089,
+      "recall": 0.8161438529784537
     },
     {
       "threshold": 0.7,
-      "alerts": 797,
-      "precision": 0.8531994981179423,
-      "recall": 0.551948051948052
+      "alerts": 8524,
+      "precision": 0.9053261379633974,
+      "recall": 0.6112959442332065
     },
     {
       "threshold": 0.9,
-      "alerts": 372,
-      "precision": 0.9543010752688172,
-      "recall": 0.28814935064935066
+      "alerts": 5452,
+      "precision": 0.9724871606749816,
+      "recall": 0.4199936628643853
     }
   ],
-  "positive_rate_test": 0.5858297669995245,
+  "positive_rate_test": 0.6099140013527877,
   "n": {
-    "train": 3879,
-    "validation": 1440,
-    "test": 2103,
-    "test_original_protocol": 273
+    "train": 47037,
+    "validation": 12120,
+    "test": 20698,
+    "test_original_protocol": 2676
   },
   "xgboost_available": true,
   "protocol": "primary rows = dense snapshots (8 points across each obligation window, open obligations only); 'orig_protocol_*' = dataset pipeline single snapshot at 20-80% of window",

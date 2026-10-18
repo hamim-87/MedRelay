@@ -27,8 +27,8 @@ def _style(ax, grid="x"):
         ax.grid(axis=grid, color=GRID, lw=0.7, alpha=0.8); ax.set_axisbelow(True)
 
 
-def chart_early_warning(F, size=(4.15, 2.75)):
-    ew = F["ew"]; sy = [("A_deadline_only", "A  deadline-only", GRAY), ("B_independent_ml", "B  independent ML", BLUE), ("C_graph_ml", "C  graph ML (ours)", CYAN)]
+def chart_early_warning(F, size=(4.15, 2.9)):
+    ew = F["ew"]; sy = [("A_deadline_only", "A  deadline-only", GRAY), ("A_reminder_24h", "A  reminder at 24 h", "#8FA3C8"), ("B_independent_ml", "B  independent ML", BLUE), ("C_graph_ml", "C  graph ML (ours)", CYAN)]
     fig, ax = plt.subplots(figsize=size)
     ys = np.arange(len(sy))[::-1]
     for y, (k, lab, col) in zip(ys, sy):
@@ -37,7 +37,7 @@ def chart_early_warning(F, size=(4.15, 2.75)):
         ax.text(far + 0.8, y + 0.13, f"{far:.1f}%", va="center", fontsize=15, fontweight="bold", color=TXT)
         ax.text(far + 0.8, y - 0.24, f"recall {ew.loc[k, 'recall'] * 100:.0f}%, lead {ew.loc[k, 'median_lead_h']:.0f} h", va="center", fontsize=10.2, color=MUT)
     ax.set_yticks(ys); ax.set_yticklabels([s[1] for s in sy], fontsize=11.5)
-    ax.set_xlim(0, 42); ax.set_xlabel("false-alert rate % (lower is better)", fontsize=10.5)
+    ax.set_xlim(0, 44); ax.set_xlabel("false-alert rate % (lower is better)", fontsize=10.5)
     ax.tick_params(axis="x", labelsize=10.5); _style(ax, "x")
     fig.tight_layout(pad=0.4); fig.savefig(OUT / "chart_early_warning.png", dpi=240); plt.close(fig)
 

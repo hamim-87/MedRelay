@@ -14,7 +14,7 @@
   "nnpa_cpu_flag": true,
   "nnpa_facility_165_listed": true,
   "memory_total_gb": 4.18,
-  "memory_available_gb": 2.62,
+  "memory_available_gb": 2.58,
   "disk_total_gb": 52.7,
   "disk_free_gb": 43.2,
   "python": "3.12.3",

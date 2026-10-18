@@ -1,6 +1,6 @@
 injection,affected,engine_declared_confirmed_overdue,engine_flagged_unverified_or_not_assessable,naive_declared_overdue,engine_metric,naive_metric,engine_final_completed_after_reconciliation,engine_flagged_contradictory,naive_declared_completed,engine_alerted_any_rule,engine_early_alert_RESULT_NOT_ACK,median_early_alert_lead_h,naive_declared_overdue_at_t*,engine_state_identical_to_clean_run,duplicates_ignored_by_graph,naive_would_double_count
-missing_completion,53,0.0,1.0,1.0,"should NOT be 'confirmed overdue' (documentation missing, task actually done)",absence=failure,,,,,,,,,,
-delayed_evidence,53,0.0,0.37735849056603776,0.37735849056603776,interim: not confirmed overdue; final: reconciled to completed,interim false overdue,1.0,,,,,,,,,
-contradictory,53,,,,contradictory state,treated as completed,,1.0,1.0,,,,,,,
-unacknowledged_results,23,,,,alerts before the deadline (reactive rules only fire after),flags only after the deadline,,,,1.0,0.9565217391304348,40.98416666666667,1.0,,,
-duplicates,340,,,,idempotency (final states unchanged),-,,,,,,,,1.0,406.0,n/a
+missing_completion,716,0.0,1.0,1.0,"should NOT be 'confirmed overdue' (documentation missing, task actually done)",absence=failure,,,,,,,,,,
+delayed_evidence,716,0.0,0.3784916201117318,0.3784916201117318,interim: not confirmed overdue; final: reconciled to completed,interim false overdue,0.9986033519553073,,,,,,,,,
+contradictory,716,,,,contradictory state,treated as completed,,1.0,0.9832402234636871,,,,,,,
+unacknowledged_results,300,,,,alerts before the deadline (reactive rules only fire after),flags only after the deadline,,,,1.0,0.9733333333333334,36.0,1.0,,,
+duplicates,4215,,,,idempotency (final states unchanged),-,,,,,,,,1.0,4895.0,n/a

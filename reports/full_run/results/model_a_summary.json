@@ -1,0 +1,66 @@
+{
+  "best_kind": "svm",
+  "best_params": {
+    "kind": "svm",
+    "C": 10.0,
+    "word_ngrams": [
+      1,
+      2
+    ],
+    "char": true,
+    "class_weight": null,
+    "seed": 20261017
+  },
+  "synthetic_augmentation": {
+    "test_macro_f1_without": 0.7067736470802068,
+    "test_macro_f1_with": 0.7056523763364008,
+    "challenge_span_acc_with": 0.4423076923076923,
+    "challenge_span_acc_without": 0.28846153846153844,
+    "n_synthetic": 622
+  },
+  "label_provenance": "train/val/test labels are SILVER (rule-proposed); 'challenge_span_*' uses developer-annotated spans (not independently reviewed); 0 human-reviewed gold",
+  "comparison": [
+    {
+      "model": "logreg",
+      "params": "{\"kind\": \"logreg\", \"C\": 0.1, \"word_ngrams\": [1, 1], \"char\": true, \"class_weight\": \"balanced\", \"seed\": 20261017}",
+      "val_macro_f1": 0.6487984808363852,
+      "val_micro_f1": 0.8173168411037107,
+      "test_macro_f1": 0.6416542591108233,
+      "test_micro_f1": 0.7908992416034669,
+      "test_micro_precision": 0.7521895929933025,
+      "test_micro_recall": 0.8338092518560822,
+      "challenge_span_accuracy": 0.40384615384615385,
+      "challenge_span_macro_f1": 0.5354707792207791,
+      "train_s": 1.2307877109997207,
+      "search_s": 7.804902076721191
+    },
+    {
+      "model": "svm",
+      "params": "{\"kind\": \"svm\", \"C\": 10.0, \"word_ngrams\": [1, 2], \"char\": true, \"class_weight\": null, \"seed\": 20261017}",
+      "val_macro_f1": 0.7130453706722724,
+      "val_micro_f1": 0.8723731419784726,
+      "test_macro_f1": 0.7067736470802068,
+      "test_micro_f1": 0.8487718259840189,
+      "test_micro_precision": 0.8808353808353808,
+      "test_micro_recall": 0.8189605939463164,
+      "challenge_span_accuracy": 0.28846153846153844,
+      "challenge_span_macro_f1": 0.3623949579831932,
+      "train_s": 1.5530194000020856,
+      "search_s": 6.805298805236816
+    },
+    {
+      "model": "mlp",
+      "params": "{\"kind\": \"mlp\", \"C\": 1.0, \"word_ngrams\": [1, 2], \"char\": true, \"class_weight\": null, \"seed\": 20261017}",
+      "val_macro_f1": 0.6236620832237432,
+      "val_micro_f1": 0.8549303045947341,
+      "test_macro_f1": 0.6091753250180459,
+      "test_micro_f1": 0.819538670284939,
+      "test_micro_precision": 0.8680932609389971,
+      "test_micro_recall": 0.7761279268989149,
+      "challenge_span_accuracy": 0.25,
+      "challenge_span_macro_f1": 0.3642399267399267,
+      "train_s": 17.564405666998937,
+      "search_s": 55.40885019302368
+    }
+  ]
+}

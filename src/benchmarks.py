@@ -69,6 +69,14 @@ def pstats(x) -> dict:
 
 
 def peak_rss_mb() -> float:
+    """Peak resident memory of THIS process (VmHWM from /proc/self/status). ru_maxrss is not used: a child process inherits its parent's peak across fork+exec,
+    which made every benchmark worker report the notebook kernel's lifetime peak instead of its own."""
+    try:
+        for line in open("/proc/self/status"):
+            if line.startswith("VmHWM:"):
+                return int(line.split()[1]) / 1024.0
+    except OSError:
+        pass
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024.0
 
 

@@ -1,5 +1,5 @@
 {
-  "mode": "fast",
+  "mode": "full",
   "checks": {
     "schema_interim": {
       "ok": true,

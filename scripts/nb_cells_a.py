@@ -48,6 +48,12 @@ pd.set_option("display.width", 220); pd.set_option("display.max_columns", 60); p
 from src.data_loader import load_config
 cfg = load_config(); MODE = cfg["mode"]
 T_NB0 = time.time()
+import psutil
+_RSS_LOG = ROOT / "logs" / "rss_by_cell.csv"; _RSS_LOG.parent.mkdir(exist_ok=True); _RSS_LOG.write_text("cell,rss_mb,t_s\\n")
+def _log_rss(result):                                       # memory of this kernel after every cell (the 4 GB VM has only ~2.7 GB usable)
+    with open(_RSS_LOG, "a") as fh:
+        fh.write(f"{result.execution_count},{psutil.Process().memory_info().rss / 1e6:.0f},{time.time() - T_NB0:.0f}\\n")
+get_ipython().events.register("post_run_cell", _log_rss)
 print(f"MedRelay | mode={MODE} | seed={cfg['seed']} | python {platform.python_version()} | machine {platform.machine()} | cwd {ROOT}")
 """)
 

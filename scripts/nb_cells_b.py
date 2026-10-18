@@ -69,6 +69,9 @@ if big_ok:
     t = time.time(); E1L = run_exp1(lab, "large", n_chal=nl["challenge"], n_tpl=nl["template"], include=["A_rules", "B_llm_raw", "C2_llm_validated_filled", "E_rules_plus_llm"])
     display(E1L["table"][["extractor", "model", "corpus", "n_docs", "typed_precision", "typed_recall", "typed_f1", "det_f1", "deadline_acc", "unsupported_field_rate", "schema_valid", "latency_mean_s", "latency_p95_s"]])
     print("larger-model comparison took", round(time.time() - t), "s on a SMALLER sample (n_docs above) because generation is ~5x slower")
+    from src.llm_backend import release_backend
+    release_backend(cfg, "large")                      # the 1B model held ~1.8 GB of the VM's ~2.7 GB usable RAM for the rest of the notebook
+    print("larger model released from memory; kernel RSS now %.0f MB" % (psutil.Process().memory_info().rss / 1e6))
 else:
     print("larger local model not installed; skipping the upper-bound comparison")
 """)

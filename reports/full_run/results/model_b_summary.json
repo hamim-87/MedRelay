@@ -1,0 +1,68 @@
+{
+  "best_per_featureset": {
+    "task_only": {
+      "model": "rf/task_only",
+      "val_pr_auc": 0.8722622475074185
+    },
+    "B_independent": {
+      "model": "rf/B_independent",
+      "val_pr_auc": 0.8827282707802818
+    },
+    "C_graph": {
+      "model": "rf/C_graph",
+      "val_pr_auc": 0.9128393422787853
+    }
+  },
+  "paired_bootstrap": {
+    "C_minus_B_pr_auc": {
+      "diff": 0.04299603033415278,
+      "lo": 0.03751725437845421,
+      "hi": 0.04838295103488403,
+      "p_diff_le_0": 0.0,
+      "n_boot": 300
+    },
+    "C_minus_task_only_pr_auc": {
+      "diff": 0.04964792217149039,
+      "lo": 0.044527723592703294,
+      "hi": 0.05512694839814974,
+      "p_diff_le_0": 0.0,
+      "n_boot": 300
+    }
+  },
+  "precision_recall_at_thresholds_C": [
+    {
+      "threshold": 0.3,
+      "alerts": 18935,
+      "precision": 0.6477422762080802,
+      "recall": 0.9715621039290241
+    },
+    {
+      "threshold": 0.5,
+      "alerts": 13218,
+      "precision": 0.7794673929490089,
+      "recall": 0.8161438529784537
+    },
+    {
+      "threshold": 0.7,
+      "alerts": 8524,
+      "precision": 0.9053261379633974,
+      "recall": 0.6112959442332065
+    },
+    {
+      "threshold": 0.9,
+      "alerts": 5452,
+      "precision": 0.9724871606749816,
+      "recall": 0.4199936628643853
+    }
+  ],
+  "positive_rate_test": 0.6099140013527877,
+  "n": {
+    "train": 47037,
+    "validation": 12120,
+    "test": 20698,
+    "test_original_protocol": 2676
+  },
+  "xgboost_available": true,
+  "protocol": "primary rows = dense snapshots (8 points across each obligation window, open obligations only); 'orig_protocol_*' = dataset pipeline single snapshot at 20-80% of window",
+  "note": "labels are simulated follow-up outcomes; 'unverified' and 'censored' rows are excluded from binary training/evaluation, never treated as failures"
+}

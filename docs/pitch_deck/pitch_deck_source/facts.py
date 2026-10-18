@@ -28,7 +28,7 @@ def load() -> dict:
     ma = json.loads((R / "model_a_summary.json").read_text())
     summ = pd.read_csv(R / "final_summary.csv").set_index("result")["measured value"]
 
-    F["hw"] = hw; F["bench"] = b; F["counts"] = dv["counts"]; F["e3"] = e3; F["ew"] = ew; F["ab"] = ab; F["e4"] = e4; F["genai"] = g; F["x1"] = x1
+    F["ew_all"] = pd.read_csv(R / "exp3_early_warning.csv"); F["lead_pr"] = pd.read_csv(R / "exp3_summary.csv").set_index("system"); F["hw"] = hw; F["bench"] = b; F["counts"] = dv["counts"]; F["e3"] = e3; F["ew"] = ew; F["ab"] = ab; F["e4"] = e4; F["genai"] = g; F["x1"] = x1
     F["mode"] = b["mode"]
     F["n_test_obl"] = e3["n"]["test_obligations"]; F["n_test_patients"] = e3["n"]["test_patients"]
     # risk model C (dense test) from the ablation table
@@ -51,6 +51,16 @@ def load() -> dict:
     mm = pd.DataFrame(b["nnpa_matmul"]["rows"]); F["mm"] = mm; F["zdnn"] = b["nnpa_matmul"]["zdnn_version"]
     F["queue"] = pd.DataFrame(b["queue"])
     F["mlat"] = pd.DataFrame(b["ml_latency"])
+    import nbformat
+    nb = nbformat.read(EV / "MedRelay_LinuxONE_End_to_End.executed_full.ipynb" if (EV / "MedRelay_LinuxONE_End_to_End.executed_full.ipynb").exists() else EV / "MedRelay_LinuxONE_End_to_End.executed_fast.ipynb", as_version=4)
+    code = [c for c in nb.cells if c.cell_type == "code"]
+    txt = "\n".join((o.text if o.output_type == "stream" else o.get("data", {}).get("text/plain", "")) for c in code for o in c.get("outputs", []))
+    m = re.search(r"notebook wall time: ([0-9.]+) min", txt); F["wall_min"] = float(m.group(1)) if m else None
+    F["nb_cells"] = len(code); F["nb_errors"] = sum(any(o.output_type == "error" for o in c.get("outputs", [])) for c in code); F["nb_text"] = txt
+    F["n_boot"] = int(e3["paired"]["C_minus_B"]["n_boot"])
+    pm = R / "benchmark_peak_memory.csv"
+    F["peakmem"] = pd.read_csv(pm) if pm.exists() else None
+    F["model_sel"] = json.loads((R / "model_b_summary.json").read_text())["best_per_featureset"]["C_graph"]["model"] if (R / "model_b_summary.json").exists() else None
     return F
 
 

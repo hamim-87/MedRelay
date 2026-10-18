@@ -1,6 +1,6 @@
 component removed,evidence
-graph dependency features,PR-AUC -0.012 (95% CI -0.019..-0.005) on dense test
-temporal features,PR-AUC -0.173 (95% CI -0.213..-0.134)
-evidence features,PR-AUC +0.004 (95% CI -0.002..+0.010)
-evidence verification (engine -> naive absence=failure),state accuracy at t*: 0.903 -> 0.884; not-confirmed recall 0.97 -> 0.00
-GenAI extraction (E -> rules only A),failure recall 0.706 -> 0.588; monitored fraction 0.613 -> 0.512
+graph dependency features,PR-AUC -0.010 (95% CI -0.013..-0.008) on dense test
+temporal features,PR-AUC -0.124 (95% CI -0.139..-0.112)
+evidence features,PR-AUC +0.000 (95% CI -0.000..+0.001)
+evidence verification (engine -> naive absence=failure),state accuracy at t*: 0.911 -> 0.853; not-confirmed recall 0.99 -> 0.00
+GenAI extraction (E -> rules only A),failure recall 0.672 -> 0.567; monitored fraction 0.700 -> 0.570

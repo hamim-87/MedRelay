@@ -99,6 +99,26 @@ def get_backend(cfg: dict, which: str = "primary") -> LlamaCppBackend:
     return _CACHE[path.name]
 
 
+def release_backend(cfg: dict, which: str) -> None:
+    """Free a local model (weights, context, KV cache) once it is no longer needed; get_backend() reloads it on demand.
+    The 4 GB VM has only ~2.7 GB usable, and the 1B comparison model alone held ~1.8 GB until the end of the notebook."""
+    import ctypes
+    import gc
+    stem = cfg["llm"][which].replace(".gguf", "")
+    for key in [k for k in _CACHE if k.startswith(stem)]:
+        be = _CACHE.pop(key)
+        try:
+            be.llm.close()
+        except Exception:
+            pass
+        del be
+    gc.collect()
+    try:
+        ctypes.CDLL("libc.so.6").malloc_trim(0)
+    except OSError:
+        pass
+
+
 def get_remote_backend(cfg: dict):
     if not cfg["llm"].get("allow_remote", False):
         raise PermissionError("remote LLM backends are disabled (llm.allow_remote=false); clinical text must stay on this machine")

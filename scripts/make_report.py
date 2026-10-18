@@ -53,7 +53,10 @@ if bj.exists():
     b = json.loads(bj.read_text())
     L.append(block("Benchmarks - ML latency", pd.DataFrame(b["ml_latency"])))
     L.append(block("Benchmarks - ML concurrency", pd.DataFrame(b["ml_concurrency"])))
-    L.append(block("Benchmarks - event throughput", pd.DataFrame(b["throughput"])))
+    L.append(block("Benchmarks - event throughput (the peak_rss_mb column is dropped: in the archived runs it was the notebook kernel's lifetime peak inherited by the worker, see README)", pd.DataFrame(b["throughput"]).drop(columns=["peak_rss_mb"], errors="ignore")))
+    pmf = R / "benchmark_peak_memory.csv"
+    if pmf.exists():
+        L.append(block("Benchmarks - per-workload peak memory (VmHWM of a fresh process; scripts/bench_peak_memory.py)", pd.read_csv(pmf)))
     L.append(block("Benchmarks - queue / backlog / loss", pd.DataFrame(b["queue"])))
     L.append(block("Benchmarks - LLM concurrency", pd.DataFrame(b["llm_concurrency"])))
     L.append("### Benchmarks - LLM generation\n\n```\n" + json.dumps({k: v for k, v in b["llm"].items()}, indent=1, default=str)[:1500] + "\n```\n\n")

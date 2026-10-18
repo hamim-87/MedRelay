@@ -26,6 +26,10 @@ BLUE, LBLUE, CYAN, TEAL, GREEN, AMBER, RED = "#0F62FE", "#4589FF", "#33B1FF", "#
 WHITE, MUTED, DIM = "#FFFFFF", "#B4C2DE", "#7C8FB5"
 
 F = charts.build_all()
+EVD = HERE / "evidence"
+MODE_WORD = "Full" if F["mode"] == "full" else "Fast"
+MODEL_NAME = {"rf": "random forest", "xgboost": "XGBoost", "hgb": "gradient boosting", "logreg": "logistic regression"}.get((F.get("model_sel") or "xgboost").split("/")[0], "tree ensemble")
+WALL = (lambda m: f"{int(m // 60)} h {int(m % 60)} min")(F["wall_min"]) if F.get("wall_min") else "n/a"
 D = Deck()
 N_SLIDES = 10
 
@@ -119,7 +123,7 @@ def slide_problem():
                                    [("Patient-safety teams", {"bold": True, "color": WHITE}), " who need an audit trail, not a guess"]], size=12.5, color=MUTED, lh=1.25, space=4)
     D.text(s, 40, 466, 880, 30, "Why it matters: a missed result or referral can delay diagnosis, and a flood of false alarms makes real ones easier to miss. Outcomes above are simulated from explicit event timelines; no real patient data was used for follow-up outcomes.", size=10.5, color=DIM, lh=1.25)
     s.notes = ("Three facts make follow-up tracking hard: obligations are in free text, they depend on each other, and documentation lags behind what actually happened. "
-               "Naive tools treat 'no record' as 'failed'. In our injected test, 53 of 53 tasks that were done but undocumented were flagged overdue by the naive rule; MedRelay confirmed none and flagged them as unverified. Simulated data.")
+               f"Naive tools treat 'no record' as 'failed'. In our injected test, {F['missing_n']} of {F['missing_n']} tasks that were done but undocumented were flagged overdue by the naive rule; MedRelay confirmed none and flagged them as unverified. Simulated data.")
 
 
 # ------------------------------------------------------------------------------------------------ slide 3: solution
@@ -174,7 +178,7 @@ def slide_arch():
     # row 1
     box(s, cx[1], r1, cw, bh, "Extractor", "rules + Granite 4.0 350M (llama.cpp, VXE); Pydantic validator", color=CYAN, mod="clinical_extractor")
     box(s, cx[2], r1, cw, bh, "Evidence graph", "tasks, dependencies, events; state rules R1 to R7", color=CYAN, mod="evidence_graph")
-    box(s, cx[3], r1, cw, bh, "Risk model", "49 features, XGBoost, calibrated probability", color=CYAN, mod="risk_predictor")
+    box(s, cx[3], r1, cw, bh, "Risk model", f"49 features, {MODEL_NAME}, calibrated probability", color=CYAN, mod="risk_predictor")
     box(s, cx[4], r1, cw, bh, "Alert engine", "grounded text, stated uncertainty, priority", color=CYAN, mod="alert_engine")
     # row 2
     box(s, cx[1], r2, cw, bh, "Event processor", "idempotent, event vs ingest time, timers, micro-batches", color=CYAN, mod="event_processor")
@@ -238,7 +242,7 @@ def slide_data_ml():
         if i < 3: D.line(s, x + sw + 2, 271, x + sw + sg - 2, 271, color=LBLUE, lw=1.8, arrow=True)
     D.text(s, 40, 318, 300, 14, "ML PIPELINE", size=10, bold=True, color=MUTED)
     row2 = [("49 features, 6 groups", "task, own events, workload, graph dependency, graph temporal, evidence; strict event-time cutoff"), ("Dense snapshots", "8 assessment points per task, only while the task is still open"),
-            ("XGBoost + calibration", "train, validation and test split by patient; calibrated probabilities"), ("Validation thresholds", "alert threshold fixed on validation; applied once to test")]
+            (f"{MODEL_NAME.capitalize()} + calibration", "4 model families compared on validation; split by patient; calibrated probabilities"), ("Validation thresholds", "alert threshold fixed on validation; applied once to test")]
     for i, (t, b) in enumerate(row2):
         x = 40 + i * (sw + sg)
         step(x, 336, sw, t, b, CYAN)
@@ -258,10 +262,14 @@ def slide_data_ml():
 def slide_linuxone():
     s = D.new(); header(s, 6, "WHY IBM Z / LINUXONE", "The whole stack, executed on s390x")
     hw = F["hw"]; mm = F["mm"][F["mm"].M == 1024].iloc[0]; thr = F["thr"]; q = F["queue"].set_index("scenario")
+    pmem = F.get("peakmem"); pk_mb = None
+    if pmem is not None:
+        pr = pmem[(pmem.workload_events == 100000) & pmem.config.str.contains("ML risk") & pmem.peak_rss_mb.notna()]
+        pk_mb = float(pr.peak_rss_mb.iloc[0]) if len(pr) else None
     panel(s, 40, 118, 420, 218, accent=CYAN)
     D.text(s, 56, 130, 380, 16, "VERIFIED ON THE VM", size=10.5, bold=True, color=CYAN)
-    rows = [("Platform", f"{hw['uname_m']}, {hw['byteorder']}-endian, {hw['hypervisor']}"), ("Resources", f"{hw['nproc']} vCPU, {hw['memory_total_gb']:.1f} GB RAM"),
-            ("CPU facilities", "vector (VXE2) and NNPA (facility 165)"), ("Native stack", "native Python 3.12 environment; no container runtime"),
+    rows = [("Platform", f"{hw['uname_m']}, {hw['byteorder']}-endian, {hw['hypervisor']}"), ("Resources", f"{hw['nproc']} vCPU, {hw['memory_total_gb']:.1f} GB RAM (about {hw['memory_available_gb']:.1f} GB usable)"),
+            ("CPU facilities", "vector (VXE2) and NNPA (facility 165)"), ("Engine memory", (f"peak {pk_mb:.0f} MB at 100,000 events (ML run)" if pk_mb else "not measured")),
             ("LLM runtime", "llama.cpp (VXE) + big-endian Granite 4.0 GGUF"), ("Local inference", f"{F['llm_model'].replace('.be.gguf', '')}, {F['llm_tps']:.1f} tokens/s")]
     for i, (k, v) in enumerate(rows):
         y = 154 + i * 30
@@ -271,9 +279,10 @@ def slide_linuxone():
     D.text(s, 492, 130, 410, 16, f"NNPA DEVICE TEST (zDNN {F['zdnn']})", size=10.5, bold=True, color=GREEN)
     D.image(s, str(HERE / "assets" / "chart_nnpa.png"), 486, 148, 424, 152)
     D.text(s, 492, 300, 420, 32, f"{mm['speedup_total_vs_numpy']:.0f}x faster than NumPy BLAS on this VM incl. data conversion; max error {mm['max_abs_err']:.3f} on values up to {mm['max_abs_ref']:.1f} (16-bit arithmetic).", size=10, color=MUTED, lh=1.2)
-    kp = [(f"{thr[thr.config.str.startswith('graph+states')].events_per_s.max() / 1000:.1f} k", "events/s", "graph + state engine, in-memory"),
-          (f"{thr[thr.config.str.contains('ML risk')].events_per_s.min():.0f} to {thr[thr.config.str.contains('ML risk')].events_per_s.max():.0f}", "events/s", "states + alerts + ML risk, SQLite WAL / in-memory"),
-          (f"{q.loc['2x capacity, block (backpressure)', 'queue_latency_ms_p99']:.0f} ms", "p99 queue latency", "at 2x measured capacity, backpressure, 0 lost"),
+    gs = thr[thr.config.str.startswith("graph+states")]; ml = thr[thr.config.str.contains("ML risk") & thr.config.str.contains("batch 64")]
+    kp = [(f"{gs.events_per_s.max() / 1000:.1f} k", "events/s", f"graph + state engine ({gs[gs.workload_events == gs.workload_events.max()].events_per_s.iloc[0] / 1000:.1f} k at {int(gs.workload_events.max()):,} events)"),
+          (f"{ml.events_per_s.min():.0f} to {ml.events_per_s.max():.0f}", "events/s", f"states + alerts + ML risk ({MODEL_NAME}), {int(ml.workload_events.min()):,} to {int(ml.workload_events.max()):,} events"),
+          (f"{q.loc['2x capacity, block (backpressure)', 'queue_latency_ms_p99'] / 1000:.1f} s", "p99 queue latency", "at 2x measured capacity, backpressure, 0 events lost"),
           (f"{q.loc['2x capacity, drop (bounded queue 200)', 'loss_rate'] * 100:.0f}% / {q.loc['4x capacity, drop (bounded queue 200)', 'loss_rate'] * 100:.0f}%", "events shed", "bounded queue at 2x / 4x measured capacity")]
     for i, (n, u, l) in enumerate(kp):
         x = 40 + i * 223
@@ -283,7 +292,7 @@ def slide_linuxone():
         D.text(s, x + 12, 401, 190, 26, l, size=9.2, color=MUTED, lh=1.15)
     D.rect(s, 40, 440, 880, 56, fill=AMBER, alpha=0.1, line=AMBER, lw=0.8, r=8, line_alpha=0.7)
     D.text(s, 54, 446, 852, 48, [[("What we do not claim: ", {"bold": True, "color": AMBER}), "the tree and linear risk models run on the CPU, not on the NNPA; only the zDNN microbenchmark proves NNPA execution. "
-                                  "Throughput was measured on a small 2 vCPU VM and varies run to run. No security, cost or availability claims are made."],
+                                  "Throughput was measured on a small 2 vCPU VM; ML scoring speed depends on the model chosen on validation. No security, cost or availability claims are made."],
                                  [("Why LinuxONE fits: ", {"bold": True, "color": WHITE}), "notes are processed by a local model on the same server that holds the data, and the event engine needs sustained, low-latency streaming."]], size=10.5, color=MUTED, lh=1.24, space=3)
     s.notes = ("What was actually run on LinuxONE: the full pipeline on an s390x big-endian VM under z/VM, a native Python environment, llama.cpp compiled for the z vector facility, Granite GGUF models converted to big-endian, and a direct zDNN matrix-multiply test on the NNPA. "
                "We are explicit that tree models do not use NNPA. Throughput numbers come from a 2 vCPU VM and varied between runs.")
@@ -294,12 +303,15 @@ def slide_results():
     s = D.new(); header(s, 7, "EXPERIMENTS & RESULTS", "Fewer false alarms, earlier warnings, honest limits")
     ew, ab = F["ew"], F["ab"]
     pw, gap = 285, 8.5
+    C, A, Rm = "C_graph_ml", "A_deadline_only", "A_reminder_24h"
+    ntask = int(ew.loc[A, "n_pos"] + ew.loc[A, "n_neg"])
+    dB = ab.loc["B_independent_ml"]; dT = ab.loc["C_no_temporal"]
     panels = [("EARLY WARNING, >= 24 h BEFORE DEADLINE", "chart_early_warning.png",
-               f"Graph model C raised {int(ew.loc['C_graph_ml', 'alerts'])} alerts at {ew.loc['C_graph_ml', 'precision'] * 100:.0f}% precision, with a {ew.loc['C_graph_ml', 'median_lead_h']:.0f} h median lead. Deadline-only A reaches 100% recall but alerts on {int(ew.loc['A_deadline_only', 'alerts'])} of {int(ew.loc['A_deadline_only', 'n_pos'] + ew.loc['A_deadline_only', 'n_neg'])} tasks."),
+               f"Graph model C: {int(ew.loc[C, 'alerts']):,} alerts, {ew.loc[C, 'precision'] * 100:.0f}% precision, {ew.loc[C, 'median_lead_h']:.0f} h median lead. A 24 h reminder is similar on false alerts ({ew.loc[Rm, 'false_alert_rate'] * 100:.1f}%) with only 24 h lead; deadline-only A reaches {ew.loc[A, 'recall'] * 100:.0f}% recall but alerts on {int(ew.loc[A, 'alerts']):,} of {ntask:,} tasks."),
               ("EVIDENCE-AWARE STATES vs NAIVE RULE", "chart_engine_vs_naive.png",
                f"State accuracy at the assessment time {F['state_acc_engine']:.3f} vs {F['state_acc_naive']:.3f}; {F['state_acc_final']:.3f} once late evidence reconciles. The naive rule never recognises an unverified task."),
               ("WHAT DRIVES THE FORECAST", "chart_ablation.png",
-               "Temporal features carry the signal; dependency features add a small, significant gain. Evidence features and the graph-vs-independent gap are not significant at this sample size.")]
+               f"Temporal features carry most of the signal ({dT['pr_auc_diff_vs_C']:+.3f} PR-AUC when removed). Graph features add a smaller, significant gain ({-dB['pr_auc_diff_vs_C']:+.3f} over independent tasks). Evidence features add nothing measurable.")]
     for i, (t, img, cap) in enumerate(panels):
         x = 40 + i * (pw + gap + 4)
         panel(s, x, 112, pw, 286)
@@ -309,7 +321,7 @@ def slide_results():
     pair = F["e3"]["paired"]
     cards = [(f"{F['c_pr_auc']:.3f}", "PR-AUC, graph model", f"95% CI {F['c_ci'][0]:.3f} to {F['c_ci'][1]:.3f}; simulated outcomes", CYAN),
              (f"{F['noshow_best']['test_pr_auc']:.3f}", "PR-AUC, real no-show data", f"vs {F['noshow_prev']:.3f} base rate; secondary proof of concept", GREEN),
-             (f"{pair['C_minus_B']['diff']:+.3f}", "graph vs independent ML", f"PR-AUC, 95% CI {pair['C_minus_B']['lo']:+.3f} to {pair['C_minus_B']['hi']:+.3f}: not significant", AMBER),
+             (f"{-dB['pr_auc_diff_vs_C']:+.3f}", "graph vs independent ML", f"dense-test PR-AUC, 95% CI {-dB['diff_ci_hi']:+.3f} to {-dB['diff_ci_lo']:+.3f}; at alert level not significant ({pair['C_minus_B']['diff']:+.3f})", AMBER),
              (f"{F['genai']['failure_recall'].loc['E_rules_plus_llm']:.2f}", "failures surfaced, rules + LLM", f"vs {F['genai']['failure_recall'].loc['A_rules']:.2f} rules only; {int(F['genai']['failures_total'].iloc[0])} failures, {int(F['genai']['episodes'].iloc[0])} episodes", LBLUE)]
     for i, (n, l1, l2, col) in enumerate(cards):
         x = 40 + i * 223
@@ -317,10 +329,11 @@ def slide_results():
         D.text(s, x + 10, 411, 90, 30, n, size=21, bold=True, color=col, lh=1.05)
         D.text(s, x + 100, 414, 108, 28, l1, size=9.8, bold=True, lh=1.15)
         D.text(s, x + 10, 443, 196, 28, l2, size=8.8, color=MUTED, lh=1.15)
-    D.text(s, 40, 476, 880, 28, f"Fast-mode run on the VM: {F['n_test_patients']} test patients, {F['n_test_obl']} test obligations, simulated outcomes, patient-grouped bootstrap (100 resamples), thresholds chosen on validation. "
-                                 "Close to the deadline a deadline-only rule is hard to beat (max-score PR-AUC 0.981 vs 0.969).", size=9.4, color=DIM, lh=1.22)
-    s.notes = ("Only measured results. The strongest finding is behavioural: the evidence-aware engine does not call undocumented work failed, and the graph model warns earlier with fewer false alerts at 24 hours of lead. "
-               "We also show where we are not better: graph versus independent ML is within noise here, and a deadline-only rule is strong near the deadline. Fast-mode sample is small; full-mode confidence intervals will be tighter.")
+    lp = F["lead_pr"]
+    D.text(s, 40, 476, 880, 28, f"{MODE_WORD}-mode run on the VM ({WALL}): {F['n_test_patients']} test patients, {F['n_test_obl']:,} test obligations, simulated outcomes, patient-grouped bootstrap ({F['n_boot']} resamples), thresholds chosen on validation. "
+                                 f"Over the whole window the deadline-only rule matches the ML models (max-score PR-AUC {lp.loc[A, 'pr_auc_max_score']:.3f} vs {lp.loc[C, 'pr_auc_max_score']:.3f}); the graph model's edge is earlier: PR-AUC {lp.loc[C, 'pr_auc_at_T-72h']:.2f} vs {lp.loc[A, 'pr_auc_at_T-72h']:.2f} at 72 h ahead.", size=9.4, color=DIM, lh=1.22)
+    s.notes = ("Only measured results. The strongest finding is behavioural: the evidence-aware engine does not call undocumented work failed, and the graph model warns earlier (72 h median lead) with fewer false alerts than a deadline-only rule. "
+               "We also show where we are not better: a simple 24-hour reminder matches the graph model on false alerts and has higher recall, and over the whole window a deadline-only rule matches the ML models. The graph model's advantage is lead time and early-window ranking.")
 
 
 # ------------------------------------------------------------------------------------------------ slide 8: demo
@@ -352,7 +365,7 @@ def slide_demo():
         D.text(s, 514, y + 14, 400, 13, why, size=9.4, color=MUTED)
     panel(s, 354, 286, 566, 184)
     D.text(s, 368, 296, 540, 14, "4  RISK OF EACH TASK AS EVENTS ARRIVE (GRAPH ML, REAL OUTPUT)", size=9.2, bold=True, color=CYAN)
-    D.image(s, str(HERE / "evidence" / "figures" / "demo_risk_monitor.png"), 366, 314, 542, 152)
+    D.image(s, str(EVD / "figures" / "demo_risk_monitor.png"), 366, 314, 542, 152)
     D.text(s, 40, 476, 880, 28, "Interim “overdue” was a correct state at that time and was reconciled when the late evidence arrived (verified in the notebook: overdue_without_verified_completion to completed_with_evidence). "
                                  "Output of notebook section 17, executed on the LinuxONE VM; the scenario events are scripted.", size=9.6, color=DIM, lh=1.22)
     s.notes = ("Walk through the story: a discharge note produces four obligations. The review task passes its deadline, so it first becomes 'censored', then 'overdue' once the tracker confirms it is still open. "
@@ -364,15 +377,15 @@ def slide_impact():
     s = D.new(); header(s, 9, "INNOVATION, IMPACT & SCALABILITY", "What is proven, and what comes next")
     e4 = F["e4"]
     panel(s, 40, 112, 430, 300, accent=GREEN)
-    D.text(s, 56, 124, 400, 16, "MEASURED (FAST-MODE RUN ON LINUXONE)", size=10.5, bold=True, color=GREEN)
+    D.text(s, 56, 124, 400, 16, f"MEASURED ({MODE_WORD.upper()}-MODE RUN ON LINUXONE)", size=10.5, bold=True, color=GREEN)
     meas = [(f"0 of {F['missing_n']}", "undocumented-but-done tasks confirmed overdue (naive rule: all)"),
-            (f"{F['dup_ignored']}", f"duplicate deliveries ignored; final states identical to a clean run ({F['dup_identical']:.0%})"),
+            (f"{F['dup_ignored']:,}", f"duplicate deliveries ignored; final states identical to a clean run ({F['dup_identical']:.0%})"),
             ("1.000", "stored states restored identically when rebuilt from the SQLite event log"),
             (f"{ew_far('C_graph_ml'):.1f}% vs {ew_far('A_deadline_only'):.1f}%", "false-alert rate, graph model vs deadline-only rule, alerts >= 24 h ahead"),
-            ("56 / 56", "notebook code cells executed without error in a clean kernel")]
+            (f"{F['nb_cells'] - F['nb_errors']} / {F['nb_cells']}", f"notebook code cells executed without error in a clean kernel ({WALL})")]
     for i, (n, t) in enumerate(meas):
         y = 148 + i * 50
-        D.text(s, 56, y, 120, 30, n, size=17, bold=True, color=CYAN, lh=1.05)
+        D.text(s, 56, y, 120, 30, n, size=(17 if len(n) <= 9 else 14.2), bold=True, color=CYAN, lh=1.05)
         D.text(s, 178, y + 1, 276, 44, t, size=10.8, color=MUTED, lh=1.22)
     panel(s, 490, 112, 430, 300, accent=AMBER)
     D.text(s, 506, 124, 400, 16, "ANTICIPATED (NOT YET MEASURED)", size=10.5, bold=True, color=AMBER)
@@ -416,7 +429,7 @@ def slide_conclusion():
     panel(s, 490, 262, 430, 140)
     D.text(s, 506, 272, 400, 14, "NEXT STEPS", size=10, bold=True, color=AMBER)
     D.text(s, 506, 292, 404, 108, ["Clinician-reviewed labels to replace weak and simulated ones.", "Validate on de-identified real records under governance.",
-                                   "Run the full-size experiments and neural components on the NNPA."], size=11, color=MUTED, lh=1.24, space=4)
+                                   "Add neural components that can use the NNPA, and test at larger scale."], size=11, color=MUTED, lh=1.24, space=4)
     D.text(s, 40, 414, 880, 40, [[("Detect. Decide. Respond.", {"color": CYAN}), "  And never mistake silence for failure."]], size=22, bold=True, lh=1.2)
     D.text(s, 40, 453, 560, 16, f"Code and notebook: {REPO}", size=11.5, color=CYAN, bold=True)
     tm = ("Team " + TEAM["name"] if TEAM.get("name") else "") + (": " if TEAM.get("name") and TEAM.get("members") else "") + ", ".join(TEAM.get("members", []))
@@ -424,7 +437,7 @@ def slide_conclusion():
     if tm:
         D.text(s, 40, 488, 880, 14, "Prototype on synthetic data. Alerts are decision support for qualified human review.", size=9.5, color=DIM)
     s.notes = ("Three achievements: no false failures from missing documentation, earlier warnings with fewer false alerts, and an end-to-end system on LinuxONE. "
-               "Close on the limits: synthetic data, weak labels, small fast-mode sample. The repository has the notebook, tests and instructions to reproduce everything.")
+               "Close on the limits: synthetic data, weak labels, simulated outcomes. The repository has the notebook, tests and instructions to reproduce everything.")
 
 
 def main():

@@ -1,39 +1,39 @@
 {
   "tuned_weights": {
-    "risk": 0.555799731146531,
-    "urgency": 0.30728011688474305,
-    "unresolved_dependencies": 0.0918458738711697,
-    "evidence_incomplete": 0.029400296944806264,
-    "importance": 0.01567398115275003
+    "risk": 0.7132012124195237,
+    "urgency": 0.020394524063712376,
+    "unresolved_dependencies": 0.05011559182501685,
+    "evidence_incomplete": 0.04220065624699977,
+    "importance": 0.17408801544474725
   },
   "learned_coefficients": {
-    "risk": 3.8038915673319886,
-    "urgency": 2.439373730758405,
-    "unresolved_dependencies": 0.21828808302268785,
-    "evidence_incomplete": 0.31352526361517297,
-    "importance": -0.4567675101349454
+    "risk": 5.194801918185915,
+    "urgency": 0.9373725973180626,
+    "unresolved_dependencies": 0.4670981143451049,
+    "evidence_incomplete": -0.02222959666723169,
+    "importance": -0.5843400455191704
   },
   "paired": {
     "weighted (tuned on validation) - risk_only": {
-      "diff": 0.004998586435676855,
-      "lo": -0.006171603273160917,
-      "hi": 0.01663700197183839,
-      "p_diff_le_0": 0.24,
-      "n_boot": 100
+      "diff": 0.003761887815519227,
+      "lo": 0.002121964853644201,
+      "hi": 0.0052308363546606056,
+      "p_diff_le_0": 0.0,
+      "n_boot": 300
     },
     "learned logistic combination - risk_only": {
-      "diff": -0.007252578980765145,
-      "lo": -0.029584376783466457,
-      "hi": 0.01296370989221534,
-      "p_diff_le_0": 0.77,
-      "n_boot": 100
+      "diff": 0.0020797181909705253,
+      "lo": -0.0006924279148866563,
+      "hi": 0.004434229138478665,
+      "p_diff_le_0": 0.07666666666666666,
+      "n_boot": 300
     },
     "deadline_only (urgency) - risk_only": {
-      "diff": -0.08302809736181005,
-      "lo": -0.11878774509941704,
-      "hi": -0.051624638596279936,
+      "diff": -0.11089699462769675,
+      "lo": -0.1230516198344005,
+      "hi": -0.1007054243705354,
       "p_diff_le_0": 1.0,
-      "n_boot": 100
+      "n_boot": 300
     }
   },
   "search_budget": 300,

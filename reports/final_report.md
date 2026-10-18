@@ -9,12 +9,12 @@ All follow-up outcomes are **simulated**; action labels are **weak (no human-rev
 ```
                                               result                                                                                                                                                                                       measured value
                Action classification (silver labels)                                                                                                                svm macro-F1 0.707 / micro-F1 0.849 (test); developer-annotated spans: accuracy 0.288
-                 Follow-up risk (simulated outcomes)                                            best graph model xgboost/C_graph: PR-AUC 0.830 [0.778,0.889], ROC-AUC 0.763, Brier 0.194, ECE 0.051; independent-task xgboost/B_independent: PR-AUC 0.820
-                      No-show (real data, secondary)                                                                                                                     hgb/with_demographics: PR-AUC 0.354 (prevalence 0.201), ROC-AUC 0.736, ECE 0.016
-                             GenAI extraction (350M)                                                                                                                                   typed F1 B/C2/E on challenge set: 0.38 / 0.43 / 0.70; rules A 0.74
-Early warning (>=24h lead, recall target 0.7 on val) A_reminder_24h: recall 1.00, FAR 0.12, lead 24h | A_deadline_only: recall 1.00, FAR 0.19, lead 36h | B_independent_ml: recall 0.80, FAR 0.10, lead 24h | C_graph_ml: recall 0.74, FAR 0.07, lead 72h
-                             State correctness at t*                                                                                                                       engine 0.903 (final after reconciliation 0.997) vs naive absence=failure 0.884
-                            Throughput (best config)                                                                                                                                                                     19254 events/s on s390x (2 vCPU)
+                 Follow-up risk (simulated outcomes)                                                      best graph model rf/C_graph: PR-AUC 0.893 [0.882,0.904], ROC-AUC 0.832, Brier 0.163, ECE 0.033; independent-task rf/B_independent: PR-AUC 0.850
+                      No-show (real data, secondary)                                                                                                                     hgb/with_demographics: PR-AUC 0.358 (prevalence 0.203), ROC-AUC 0.733, ECE 0.006
+                             GenAI extraction (350M)                                                                                                                                   typed F1 B/C2/E on challenge set: 0.40 / 0.43 / 0.65; rules A 0.64
+Early warning (>=24h lead, recall target 0.7 on val) A_reminder_24h: recall 0.96, FAR 0.12, lead 24h | A_deadline_only: recall 0.96, FAR 0.19, lead 36h | B_independent_ml: recall 0.86, FAR 0.13, lead 36h | C_graph_ml: recall 0.79, FAR 0.11, lead 72h
+                             State correctness at t*                                                                                                                       engine 0.911 (final after reconciliation 1.000) vs naive absence=failure 0.853
+                            Throughput (best config)                                                                                                                                                                     20622 events/s on s390x (2 vCPU)
 ```
 
 
@@ -44,14 +44,14 @@ no_completed_obligation_at_assessment    True                                   
 
 ```
               extractor                        corpus  n_docs  typed_precision  typed_recall  typed_f1  typed_f1_lo  typed_f1_hi  det_f1  deadline_acc  dep_f1_on_matched  unsupported_field_rate  schema_valid  latency_mean_s  latency_p95_s
-                A_rules developer_annotated_challenge      12            0.867         0.650     0.743        0.543        0.889   0.857           1.0                0.5                     0.0         1.000           0.001          0.004
-C2_llm_validated_filled developer_annotated_challenge      12            0.471         0.400     0.432        0.279        0.636   0.757           1.0                0.0                     0.0         0.917          11.250         21.291
-       E_rules_plus_llm developer_annotated_challenge      12            0.765         0.650     0.703        0.475        0.867   0.865           1.0                0.8                     0.0         0.917          11.250         21.291
-        D_hybrid_llm_ml developer_annotated_challenge      12            0.588         0.500     0.541        0.420        0.737   0.757           1.0                0.0                     0.0         0.917          11.250         21.291
-                A_rules     template_heldout_phrasing      12            0.889         0.444     0.593        0.473        0.767   0.667           1.0                0.0                     0.0         1.000           0.001          0.001
-C2_llm_validated_filled     template_heldout_phrasing      12            0.455         0.278     0.345        0.180        0.527   0.586           1.0                0.0                     0.0         0.917          17.501         25.651
-       E_rules_plus_llm     template_heldout_phrasing      12            0.708         0.472     0.567        0.427        0.723   0.767           1.0                0.0                     0.0         0.917          17.501         25.652
-        D_hybrid_llm_ml     template_heldout_phrasing      12            0.500         0.306     0.379        0.180        0.596   0.586           1.0                0.0                     0.0         0.917          17.501         25.651
+                A_rules developer_annotated_challenge      40            0.897         0.500     0.642        0.500        0.759   0.716         1.000              0.500                     0.0         1.000           0.000          0.001
+C2_llm_validated_filled developer_annotated_challenge      40            0.426         0.442     0.434        0.309        0.544   0.736         1.000              0.000                     0.0         0.950          10.196         21.210
+       E_rules_plus_llm developer_annotated_challenge      40            0.673         0.635     0.653        0.545        0.773   0.851         1.000              0.667                     0.0         0.950          10.196         21.210
+        D_hybrid_llm_ml developer_annotated_challenge      40            0.481         0.500     0.491        0.362        0.595   0.736         1.000              0.000                     0.0         0.950          10.196         21.210
+                A_rules     template_heldout_phrasing      60            0.963         0.498     0.656        0.593        0.724   0.681         1.000              0.348                     0.0         1.000           0.001          0.002
+C2_llm_validated_filled     template_heldout_phrasing      60            0.414         0.254     0.315        0.243        0.379   0.576         0.962              0.333                     0.0         0.917          18.329         29.128
+       E_rules_plus_llm     template_heldout_phrasing      60            0.762         0.584     0.661        0.604        0.724   0.802         1.000              0.571                     0.0         0.917          18.329         29.129
+        D_hybrid_llm_ml     template_heldout_phrasing      60            0.461         0.282     0.350        0.275        0.433   0.576         0.966              0.286                     0.0         0.917          18.329         29.128
 ```
 
 
@@ -59,24 +59,24 @@ C2_llm_validated_filled     template_heldout_phrasing      12            0.455  
 
 ```
               extractor                       model                        corpus  n_docs  typed_precision  typed_recall  typed_f1  det_f1  deadline_acc  unsupported_field_rate  schema_valid  latency_mean_s  latency_p95_s
-                A_rules                       rules developer_annotated_challenge       6            0.909         0.714     0.800   0.880           1.0                   0.000         1.000           0.004          0.013
-              B_llm_raw granite-4.0-1b-Q4_0.be.gguf developer_annotated_challenge       6            0.556         0.357     0.435   0.609           1.0                   0.176         0.333          56.063         89.319
-C2_llm_validated_filled granite-4.0-1b-Q4_0.be.gguf developer_annotated_challenge       6            0.714         0.357     0.476   0.667           1.0                   0.000         0.333          83.397        196.172
-       E_rules_plus_llm granite-4.0-1b-Q4_0.be.gguf developer_annotated_challenge       6            0.909         0.714     0.800   0.880           1.0                   0.000         0.333          83.398        196.173
-                A_rules                       rules     template_heldout_phrasing       6            0.900         0.500     0.643   0.714           1.0                   0.000         1.000           0.001          0.001
-              B_llm_raw granite-4.0-1b-Q4_0.be.gguf     template_heldout_phrasing       6            0.625         0.556     0.588   0.765           1.0                   0.040         0.500          60.983         89.351
-C2_llm_validated_filled granite-4.0-1b-Q4_0.be.gguf     template_heldout_phrasing       6            0.667         0.556     0.606   0.788           1.0                   0.000         0.500          60.983         89.351
-       E_rules_plus_llm granite-4.0-1b-Q4_0.be.gguf     template_heldout_phrasing       6            0.769         0.556     0.645   0.774           1.0                   0.000         0.500          60.983         89.352
+                A_rules                       rules developer_annotated_challenge      20            0.900         0.621     0.735   0.816         1.000                   0.000           1.0           0.000          0.001
+              B_llm_raw granite-4.0-1b-Q4_0.be.gguf developer_annotated_challenge      20            0.556         0.345     0.426   0.553         0.667                   0.226           0.5          36.832         76.310
+C2_llm_validated_filled granite-4.0-1b-Q4_0.be.gguf developer_annotated_challenge      20            0.667         0.345     0.455   0.591         1.000                   0.000           0.5          65.239        170.206
+       E_rules_plus_llm granite-4.0-1b-Q4_0.be.gguf developer_annotated_challenge      20            0.818         0.621     0.706   0.784         1.000                   0.000           0.5          65.240        170.207
+                A_rules                       rules     template_heldout_phrasing      20            0.893         0.385     0.538   0.602         1.000                   0.000           1.0           0.001          0.001
+              B_llm_raw granite-4.0-1b-Q4_0.be.gguf     template_heldout_phrasing      20            0.581         0.385     0.463   0.574         0.818                   0.130           0.3          59.060         90.755
+C2_llm_validated_filled granite-4.0-1b-Q4_0.be.gguf     template_heldout_phrasing      20            0.650         0.400     0.495   0.629         0.909                   0.000           0.3          60.301         90.755
+       E_rules_plus_llm granite-4.0-1b-Q4_0.be.gguf     template_heldout_phrasing      20            0.711         0.492     0.582   0.727         0.933                   0.000           0.3          60.302         90.756
 ```
 
 
 ### Model A - action classifier
 
 ```
- model                                                                                                     params  val_macro_f1  val_micro_f1  test_macro_f1  test_micro_f1  test_micro_precision  test_micro_recall  challenge_span_accuracy  challenge_span_macro_f1  train_s  search_s
-logreg {"kind": "logreg", "C": 10.0, "word_ngrams": [1, 2], "char": true, "class_weight": null, "seed": 20261017}         0.621         0.864          0.595          0.831                 0.888              0.782                    0.231                    0.324    1.850     3.587
-   svm    {"kind": "svm", "C": 10.0, "word_ngrams": [1, 2], "char": true, "class_weight": null, "seed": 20261017}         0.713         0.872          0.707          0.849                 0.881              0.819                    0.288                    0.362    1.611     3.272
-   mlp     {"kind": "mlp", "C": 1.0, "word_ngrams": [1, 2], "char": true, "class_weight": null, "seed": 20261017}         0.624         0.855          0.609          0.820                 0.868              0.776                    0.250                    0.364   18.802    31.109
+ model                                                                                                          params  val_macro_f1  val_micro_f1  test_macro_f1  test_micro_f1  test_micro_precision  test_micro_recall  challenge_span_accuracy  challenge_span_macro_f1  train_s  search_s
+logreg {"kind": "logreg", "C": 0.1, "word_ngrams": [1, 1], "char": true, "class_weight": "balanced", "seed": 20261017}         0.649         0.817          0.642          0.791                 0.752              0.834                    0.404                    0.535    1.231     7.805
+   svm         {"kind": "svm", "C": 10.0, "word_ngrams": [1, 2], "char": true, "class_weight": null, "seed": 20261017}         0.713         0.872          0.707          0.849                 0.881              0.819                    0.288                    0.362    1.553     6.805
+   mlp          {"kind": "mlp", "C": 1.0, "word_ngrams": [1, 2], "char": true, "class_weight": null, "seed": 20261017}         0.624         0.855          0.609          0.820                 0.868              0.776                    0.250                    0.364   17.564    55.409
 ```
 
 
@@ -84,56 +84,56 @@ logreg {"kind": "logreg", "C": 10.0, "word_ngrams": [1, 2], "char": true, "class
 
 ```
                 model      features  val_pr_auc  test_pr_auc  test_pr_auc_ci_lo  test_pr_auc_ci_hi  test_roc_auc  test_brier  test_ece  test_ece_uncalibrated  orig_protocol_test_pr_auc
-     logreg/task_only     task_only       0.789        0.780              0.717              0.843         0.712       0.210     0.049                  0.106                      0.654
-        hgb/task_only     task_only       0.761        0.736              0.689              0.803         0.674       0.225     0.057                  0.173                      0.609
-         rf/task_only     task_only       0.819        0.792              0.739              0.853         0.736       0.200     0.021                  0.042                      0.647
-    xgboost/task_only     task_only       0.812        0.797              0.745              0.859         0.734       0.201     0.028                  0.049                      0.643
- logreg/B_independent B_independent       0.803        0.793              0.743              0.846         0.726       0.209     0.062                  0.110                      0.672
-    hgb/B_independent B_independent       0.790        0.776              0.727              0.829         0.702       0.212     0.049                  0.174                      0.652
-     rf/B_independent B_independent       0.833        0.818              0.767              0.878         0.755       0.196     0.033                  0.044                      0.683
-xgboost/B_independent B_independent       0.837        0.820              0.772              0.878         0.749       0.196     0.021                  0.057                      0.677
-       logreg/C_graph       C_graph       0.849        0.800              0.754              0.859         0.720       0.227     0.116                  0.159                      0.675
-          hgb/C_graph       C_graph       0.832        0.817              0.765              0.872         0.752       0.201     0.060                  0.131                      0.723
-           rf/C_graph       C_graph       0.865        0.832              0.780              0.889         0.777       0.188     0.035                  0.030                      0.735
-      xgboost/C_graph       C_graph       0.866        0.830              0.778              0.889         0.763       0.194     0.051                  0.076                      0.718
+     logreg/task_only     task_only       0.866        0.831              0.816              0.845         0.751       0.195     0.042                  0.044                      0.715
+        hgb/task_only     task_only       0.871        0.844              0.830              0.858         0.764       0.190     0.041                  0.025                      0.726
+         rf/task_only     task_only       0.872        0.843              0.830              0.858         0.765       0.190     0.039                  0.017                      0.731
+    xgboost/task_only     task_only       0.871        0.845              0.831              0.858         0.766       0.190     0.038                  0.023                      0.725
+ logreg/B_independent B_independent       0.872        0.840              0.826              0.855         0.756       0.193     0.042                  0.044                      0.737
+    hgb/B_independent B_independent       0.879        0.849              0.836              0.863         0.774       0.187     0.040                  0.028                      0.742
+     rf/B_independent B_independent       0.883        0.850              0.838              0.863         0.773       0.187     0.035                  0.016                      0.746
+xgboost/B_independent B_independent       0.882        0.852              0.841              0.865         0.774       0.187     0.037                  0.018                      0.756
+       logreg/C_graph       C_graph       0.898        0.872              0.859              0.886         0.800       0.178     0.043                  0.041                      0.812
+          hgb/C_graph       C_graph       0.910        0.892              0.881              0.904         0.829       0.165     0.037                  0.021                      0.850
+           rf/C_graph       C_graph       0.913        0.893              0.882              0.904         0.832       0.163     0.033                  0.017                      0.849
+      xgboost/C_graph       C_graph       0.913        0.893              0.882              0.905         0.831       0.164     0.034                  0.024                      0.846
 ```
 
 
 ### Model B baselines
 
 ```
-                model    n  prevalence  pr_auc  roc_auc  brier   ece
-majority(train prior) 2103       0.586   0.586    0.500  0.247 0.066
- deadline_only_logreg 2103       0.586   0.827    0.745  0.200 0.056
+                model     n  prevalence  pr_auc  roc_auc  brier   ece
+majority(train prior) 20698        0.61   0.610    0.500  0.239 0.025
+ deadline_only_logreg 20698        0.61   0.837    0.743  0.197 0.053
 ```
 
 
 ### Model C - appointment no-show (real data)
 
 ```
-                    model          features  val_pr_auc  test_pr_auc  pr_auc_ci_lo  pr_auc_ci_hi  test_roc_auc  test_brier  test_ece  prevalence  precision@top20%  recall@top20%  fit_s
-   logreg/scheduling_only   scheduling_only       0.320        0.304         0.289         0.321         0.704       0.146     0.014       0.201             0.315          0.605 35.936
-      hgb/scheduling_only   scheduling_only       0.336        0.334         0.312         0.357         0.722       0.144     0.007       0.201             0.337          0.497 40.563
-  xgboost/scheduling_only   scheduling_only       0.335        0.336         0.316         0.357         0.724       0.144     0.006       0.201             0.343          0.460 36.757
- logreg/with_demographics with_demographics       0.345        0.334         0.316         0.359         0.725       0.145     0.005       0.201             0.357          0.417 35.807
-    hgb/with_demographics with_demographics       0.372        0.354         0.331         0.379         0.736       0.144     0.016       0.201             0.365          0.476 39.199
-xgboost/with_demographics with_demographics       0.370        0.360         0.337         0.384         0.738       0.143     0.006       0.201             0.347          0.577 36.543
+                    model          features  val_pr_auc  test_pr_auc  pr_auc_ci_lo  pr_auc_ci_hi  test_roc_auc  test_brier  test_ece  prevalence  precision@top20%  recall@top20%   fit_s
+   logreg/scheduling_only   scheduling_only       0.317        0.302         0.290         0.318         0.694       0.148     0.012       0.203             0.313          0.421 109.303
+      hgb/scheduling_only   scheduling_only       0.350        0.325         0.311         0.340         0.712       0.146     0.008       0.203             0.327          0.560 119.041
+  xgboost/scheduling_only   scheduling_only       0.343        0.324         0.308         0.339         0.711       0.146     0.007       0.203             0.332          0.562 113.144
+ logreg/with_demographics with_demographics       0.345        0.326         0.314         0.342         0.716       0.146     0.006       0.203             0.350          0.372 117.336
+    hgb/with_demographics with_demographics       0.385        0.358         0.342         0.375         0.733       0.144     0.006       0.203             0.365          0.440 123.358
+xgboost/with_demographics with_demographics       0.370        0.360         0.345         0.376         0.736       0.144     0.005       0.203             0.367          0.508 114.061
 ```
 
 
 ### Model C - subgroup screen
 
 ```
-      group level    n  prevalence  mean_pred  pr_auc  flagged_share_top20
-     gender     F 4416       0.204      0.207   0.348                0.264
-     gender     M 2311       0.195      0.193   0.369                0.258
-   age_band  0-17 1684       0.213      0.204   0.369                0.291
-   age_band 18-34 1485       0.232      0.232   0.401                0.432
-   age_band   65+  774       0.152      0.175   0.269                0.054
-   age_band 35-49 1360       0.215      0.211   0.352                0.296
-   age_band 50-64 1424       0.168      0.177   0.274                0.133
-scholarship     0 6091       0.197      0.199   0.349                0.247
-scholarship     1  636       0.244      0.231   0.398                0.407
+      group level     n  prevalence  mean_pred  pr_auc  flagged_share_top20
+     gender     F 10758       0.210      0.204   0.368                0.242
+     gender     M  5713       0.190      0.199   0.342                0.247
+   age_band  0-17  4028       0.211      0.207   0.363                0.307
+   age_band 18-34  3492       0.241      0.233   0.388                0.408
+   age_band 50-64  3571       0.165      0.178   0.292                0.103
+   age_band 35-49  3362       0.223      0.208   0.367                0.258
+   age_band   65+  2018       0.153      0.169   0.279                0.060
+scholarship     0 14853       0.198      0.199   0.348                0.229
+scholarship     1  1618       0.245      0.232   0.422                0.383
 ```
 
 
@@ -141,14 +141,14 @@ scholarship     1  636       0.244      0.231   0.398                0.407
 
 ```
                system  pr_auc_max_score  pr_auc_lo  pr_auc_hi  pr_auc_at_T-24h  pr_auc_at_T-72h  roc_auc_max_score
-      A_deadline_only             0.981      0.951      0.999            0.739            0.501              0.993
-       A_reminder_24h             0.827      0.724      0.898            0.371            0.371              0.938
-     B_independent_ml             0.963      0.934      0.984            0.709            0.542              0.985
-           C_graph_ml             0.969      0.948      0.989            0.832            0.681              0.982
-C_no_graph_dependency             0.961      0.939      0.981            0.719            0.606              0.978
-        C_no_temporal             0.547      0.418      0.656            0.620            0.541              0.637
-        C_no_evidence             0.971      0.951      0.990            0.841            0.691              0.984
-  C_no_graph_temporal             0.979      0.955      0.994            0.846            0.701              0.990
+      A_deadline_only             0.963      0.952      0.971            0.751            0.578              0.984
+       A_reminder_24h             0.838      0.818      0.858            0.399            0.398              0.936
+     B_independent_ml             0.965      0.955      0.974            0.779            0.622              0.986
+           C_graph_ml             0.964      0.955      0.971            0.881            0.741              0.985
+C_no_graph_dependency             0.967      0.957      0.975            0.827            0.707              0.985
+        C_no_temporal             0.656      0.629      0.682            0.713            0.643              0.721
+        C_no_evidence             0.970      0.961      0.977            0.878            0.736              0.987
+  C_no_graph_temporal             0.969      0.960      0.976            0.868            0.728              0.986
 ```
 
 
@@ -156,30 +156,30 @@ C_no_graph_dependency             0.961      0.939      0.981            0.719  
 
 ```
                system  min_lead_h  threshold(val)  alerts  recall  precision  false_alert_rate  median_lead_h  alerts_on_unverified_or_censored
-      A_deadline_only         0.0           0.917     135   1.000      0.963             0.022          6.000                                26
-      A_deadline_only        24.0           0.667     167   1.000      0.755             0.191         36.000                                28
-      A_deadline_only        72.0           0.500     122   0.629      0.611             0.236         78.000                                14
-       A_reminder_24h         0.0           1.000     155   1.000      0.827             0.124         24.000                                28
-       A_reminder_24h        24.0           1.000     155   1.000      0.827             0.124         24.000                                28
-       A_reminder_24h        72.0           0.000     189   0.629      0.384             0.596        143.999                                17
-     B_independent_ml         0.0           0.924     126   0.905      0.905             0.056         24.000                                21
-     B_independent_ml        24.0           0.846     120   0.800      0.832             0.096         24.000                                19
-     B_independent_ml        72.0           0.413     159   0.600      0.434             0.461        143.996                                14
-           C_graph_ml         0.0           0.952     111   0.848      0.967             0.017         24.000                                19
-           C_graph_ml        24.0           0.852     108   0.743      0.867             0.067         72.000                                18
-           C_graph_ml        72.0           0.380     160   0.629      0.455             0.444        143.997                                15
-C_no_graph_dependency         0.0           0.922     110   0.829      0.946             0.028         24.000                                18
-C_no_graph_dependency        24.0           0.889     104   0.714      0.852             0.073         24.000                                16
-C_no_graph_dependency        72.0           0.381     186   0.629      0.388             0.584        143.999                                16
-        C_no_temporal         0.0           0.634     248   0.819      0.394             0.742        143.988                                30
-        C_no_temporal        24.0           0.634     248   0.819      0.394             0.742        143.988                                30
-        C_no_temporal        72.0           0.476     184   0.610      0.381             0.584        143.999                                16
-        C_no_evidence         0.0           0.956     118   0.895      0.969             0.017         24.000                                21
-        C_no_evidence        24.0           0.866     121   0.810      0.833             0.096         72.000                                19
-        C_no_evidence        72.0           0.310     173   0.629      0.418             0.517        143.998                                15
-  C_no_graph_temporal         0.0           0.956     105   0.819      0.977             0.011         24.000                                17
-  C_no_graph_temporal        24.0           0.846     107   0.752      0.888             0.056         72.000                                18
-  C_no_graph_temporal        72.0           0.446     150   0.619      0.481             0.393        143.996                                15
+      A_deadline_only         0.0           0.917    2106   0.957      0.934             0.044          6.000                               490
+      A_deadline_only        24.0           0.667    2469   0.957      0.770             0.188         36.000                               509
+      A_deadline_only        72.0           0.000    3029   0.703      0.426             0.627        222.480                               421
+       A_reminder_24h         0.0           1.000    2404   1.000      0.838             0.127         24.000                               522
+       A_reminder_24h        24.0           1.000    2311   0.961      0.841             0.120         24.000                               508
+       A_reminder_24h        72.0           0.000    3133   0.704      0.410             0.668        287.991                               426
+     B_independent_ml         0.0           0.974    2005   0.919      0.945             0.035         11.963                               471
+     B_independent_ml        24.0           0.875    2082   0.857      0.818             0.126         36.000                               428
+     B_independent_ml        72.0           0.387    2878   0.700      0.447             0.573        252.000                               406
+           C_graph_ml         0.0           0.990    1843   0.846      0.948             0.031         24.000                               435
+           C_graph_ml        24.0           0.843    1916   0.790      0.822             0.113         72.000                               399
+           C_graph_ml        72.0           0.352    2783   0.701      0.464             0.535        227.995                               398
+C_no_graph_dependency         0.0           0.981    1931   0.884      0.943             0.036         18.000                               451
+C_no_graph_dependency        24.0           0.844    1938   0.825      0.849             0.097         72.000                               404
+C_no_graph_dependency        72.0           0.425    2654   0.698      0.487             0.485        180.000                               395
+        C_no_temporal         0.0           0.673    3304   0.854      0.478             0.617        143.991                               484
+        C_no_temporal        24.0           0.673    3245   0.823      0.469             0.615        143.993                               476
+        C_no_temporal        72.0           0.348    3133   0.704      0.410             0.668        287.991                               426
+        C_no_evidence         0.0           0.988    1869   0.856      0.947             0.031         24.000                               444
+        C_no_evidence        24.0           0.844    1924   0.796      0.825             0.112         72.000                               401
+        C_no_evidence        72.0           0.335    2803   0.700      0.460             0.543        252.000                               400
+  C_no_graph_temporal         0.0           0.983    1849   0.849      0.947             0.031         24.000                               435
+  C_no_graph_temporal        24.0           0.852    1994   0.802      0.795             0.137         72.000                               401
+  C_no_graph_temporal        72.0           0.342    2832   0.702      0.456             0.553        252.000                               404
 ```
 
 
@@ -187,12 +187,12 @@ C_no_graph_dependency        72.0           0.381     186   0.629      0.388    
 
 ```
                      rule  alerts  precision_vs_overdue  on_completed  on_unverified_or_censored  median_lead_h(before deadline)
-      BLOCKED_BY_UPSTREAM      81                 0.794            14                         13                          72.000
-    COMPLETION_UNVERIFIED      64                 0.969             1                         32                         -12.000
-     CONFLICTING_EVIDENCE      11                 0.000             0                         11                             NaN
-DEADLINE_MISSED_CONFIRMED      75                 1.000             0                          1                          -1.006
-                HIGH_RISK     286                 0.781            32                        140                          36.000
-  RESULT_NOT_ACKNOWLEDGED      89                 0.514            36                         15                          36.000
+      BLOCKED_BY_UPSTREAM    1364                 0.744           279                        274                          71.992
+    COMPLETION_UNVERIFIED     979                 0.905            39                        569                         -12.000
+     CONFLICTING_EVIDENCE     141                 0.000             0                        141                             NaN
+DEADLINE_MISSED_CONFIRMED    1223                 1.000             0                          1                          -1.006
+                HIGH_RISK    3340                 0.703           757                        793                          36.000
+  RESULT_NOT_ACKNOWLEDGED    1104                 0.537           423                        191                          36.000
 ```
 
 
@@ -200,11 +200,11 @@ DEADLINE_MISSED_CONFIRMED      75                 1.000             0           
 
 ```
              injection  affected  engine_declared_confirmed_overdue  engine_flagged_unverified_or_not_assessable  naive_declared_overdue                                                                 engine_metric                  naive_metric  engine_final_completed_after_reconciliation  engine_flagged_contradictory  naive_declared_completed  engine_alerted_any_rule  engine_early_alert_RESULT_NOT_ACK  median_early_alert_lead_h  naive_declared_overdue_at_t*  engine_state_identical_to_clean_run  duplicates_ignored_by_graph  naive_would_double_count
-    missing_completion        53                                0.0                                        1.000                   1.000 should NOT be 'confirmed overdue' (documentation missing, task actually done)               absence=failure                                          NaN                           NaN                       NaN                      NaN                                NaN                        NaN                           NaN                                  NaN                          NaN                       NaN
-      delayed_evidence        53                                0.0                                        0.377                   0.377                interim: not confirmed overdue; final: reconciled to completed         interim false overdue                                          1.0                           NaN                       NaN                      NaN                                NaN                        NaN                           NaN                                  NaN                          NaN                       NaN
-         contradictory        53                                NaN                                          NaN                     NaN                                                           contradictory state          treated as completed                                          NaN                           1.0                       1.0                      NaN                                NaN                        NaN                           NaN                                  NaN                          NaN                       NaN
-unacknowledged_results        23                                NaN                                          NaN                     NaN                   alerts before the deadline (reactive rules only fire after) flags only after the deadline                                          NaN                           NaN                       NaN                      1.0                              0.957                     40.984                           1.0                                  NaN                          NaN                       NaN
-            duplicates       340                                NaN                                          NaN                     NaN                                          idempotency (final states unchanged)                             -                                          NaN                           NaN                       NaN                      NaN                                NaN                        NaN                           NaN                                  1.0                        406.0                       NaN
+    missing_completion       716                                0.0                                        1.000                   1.000 should NOT be 'confirmed overdue' (documentation missing, task actually done)               absence=failure                                          NaN                           NaN                       NaN                      NaN                                NaN                        NaN                           NaN                                  NaN                          NaN                       NaN
+      delayed_evidence       716                                0.0                                        0.378                   0.378                interim: not confirmed overdue; final: reconciled to completed         interim false overdue                                        0.999                           NaN                       NaN                      NaN                                NaN                        NaN                           NaN                                  NaN                          NaN                       NaN
+         contradictory       716                                NaN                                          NaN                     NaN                                                           contradictory state          treated as completed                                          NaN                           1.0                     0.983                      NaN                                NaN                        NaN                           NaN                                  NaN                          NaN                       NaN
+unacknowledged_results       300                                NaN                                          NaN                     NaN                   alerts before the deadline (reactive rules only fire after) flags only after the deadline                                          NaN                           NaN                       NaN                      1.0                              0.973                       36.0                           1.0                                  NaN                          NaN                       NaN
+            duplicates      4215                                NaN                                          NaN                     NaN                                          idempotency (final states unchanged)                             -                                          NaN                           NaN                       NaN                      NaN                                NaN                        NaN                           NaN                                  1.0                       4895.0                       NaN
 ```
 
 
@@ -212,12 +212,12 @@ unacknowledged_results        23                                NaN             
 
 ```
                system  n_features  pr_auc  roc_auc  brier   ece  pr_auc_diff_vs_C  diff_ci_lo  diff_ci_hi
-           C_graph_ml          49   0.830    0.763  0.194 0.051             0.000       0.000       0.000
-C_no_graph_dependency          41   0.818    0.745  0.203 0.059            -0.012      -0.019      -0.005
-        C_no_temporal          42   0.657    0.571  0.244 0.080            -0.173      -0.213      -0.134
-        C_no_evidence          43   0.834    0.771  0.192 0.046             0.004      -0.002       0.010
-  C_no_graph_temporal          40   0.842    0.784  0.185 0.019             0.012      -0.003       0.025
-     B_independent_ml          26   0.820    0.749  0.196 0.021            -0.010      -0.026       0.002
+           C_graph_ml          49   0.893    0.832  0.163 0.033             0.000       0.000       0.000
+C_no_graph_dependency          41   0.883    0.817  0.169 0.034            -0.010      -0.013      -0.008
+        C_no_temporal          42   0.769    0.688  0.214 0.044            -0.124      -0.139      -0.112
+        C_no_evidence          43   0.893    0.831  0.164 0.033             0.000      -0.000       0.001
+  C_no_graph_temporal          40   0.880    0.814  0.171 0.034            -0.013      -0.016      -0.010
+     B_independent_ml          26   0.850    0.773  0.187 0.035            -0.043      -0.049      -0.039
 ```
 
 
@@ -225,11 +225,11 @@ C_no_graph_dependency          41   0.818    0.745  0.203 0.059            -0.01
 
 ```
                                       component removed                                                                evidence
-                              graph dependency features                     PR-AUC -0.012 (95% CI -0.019..-0.005) on dense test
-                                      temporal features                                   PR-AUC -0.173 (95% CI -0.213..-0.134)
-                                      evidence features                                   PR-AUC +0.004 (95% CI -0.002..+0.010)
-evidence verification (engine -> naive absence=failure) state accuracy at t*: 0.903 -> 0.884; not-confirmed recall 0.97 -> 0.00
-                   GenAI extraction (E -> rules only A)        failure recall 0.706 -> 0.588; monitored fraction 0.613 -> 0.512
+                              graph dependency features                     PR-AUC -0.010 (95% CI -0.013..-0.008) on dense test
+                                      temporal features                                   PR-AUC -0.124 (95% CI -0.139..-0.112)
+                                      evidence features                                   PR-AUC +0.000 (95% CI -0.000..+0.001)
+evidence verification (engine -> naive absence=failure) state accuracy at t*: 0.911 -> 0.853; not-confirmed recall 0.99 -> 0.00
+                   GenAI extraction (E -> rules only A)        failure recall 0.672 -> 0.567; monitored fraction 0.700 -> 0.570
 ```
 
 
@@ -237,11 +237,11 @@ evidence verification (engine -> naive absence=failure) state accuracy at t*: 0.
 
 ```
               extractor  failures_total  failures_surfaced  failure_recall  monitored_fraction  spurious_obligations  false_alerts  false_alerts_per_episode  precision_of_alerts  alerts_total  episodes
-   none (no extraction)              17                  0           0.000               0.000                     0             0                     0.000                  NaN             0        24
-                A_rules              17                 10           0.588               0.512                     1            12                     0.500                0.455            22        24
-C2_llm_validated_filled              17                  4           0.235               0.325                     6            18                     0.750                0.182            22        24
-        D_hybrid_llm_ml              17                  4           0.235               0.325                     6            15                     0.625                0.211            19        24
-       E_rules_plus_llm              17                 12           0.706               0.612                     4            19                     0.792                0.387            31        24
+   none (no extraction)              67                  0           0.000               0.000                     0             0                     0.000                  NaN             0       120
+                A_rules              67                 38           0.567               0.570                     1            54                     0.450                0.465           101       120
+C2_llm_validated_filled              67                 17           0.254               0.395                    58           140                     1.167                0.146           164       120
+        D_hybrid_llm_ml              67                 17           0.254               0.395                    58           124                     1.033                0.162           148       120
+       E_rules_plus_llm              67                 45           0.672               0.700                    24           116                     0.967                0.326           172       120
 ```
 
 
@@ -249,43 +249,45 @@ C2_llm_validated_filled              17                  4           0.235      
 
 ```
                           method  pr_auc  pr_auc_lo  pr_auc_hi  precision@top10%  precision@top20%  precision@top30%
-         deadline_only (urgency)   0.747      0.680      0.804             0.886             0.867             0.779
-    risk_only (calibrated model)   0.830      0.767      0.873             0.981             0.945             0.897
-            risk x sqrt(urgency)   0.819      0.755      0.869             0.948             0.898             0.878
-weighted (fixed default weights)   0.837      0.770      0.883             0.957             0.929             0.890
-  weighted (tuned on validation)   0.835      0.771      0.881             0.948             0.919             0.887
-    learned logistic combination   0.823      0.753      0.874             0.910             0.914             0.890
+         deadline_only (urgency)   0.782      0.764      0.800             0.951             0.906             0.836
+    risk_only (calibrated model)   0.893      0.881      0.903             0.993             0.986             0.961
+            risk x sqrt(urgency)   0.866      0.853      0.880             0.985             0.957             0.922
+weighted (fixed default weights)   0.891      0.877      0.903             0.986             0.977             0.946
+  weighted (tuned on validation)   0.897      0.884      0.907             0.993             0.981             0.958
+    learned logistic combination   0.895      0.882      0.907             0.988             0.979             0.958
 ```
 
 
 ### Error rates by hidden generator profile (post-hoc analysis only)
 
 ```
-              profile     n  overdue_share  flag_rate  recall  false_alert_rate
- conflicting_evidence   6.0          0.500      0.000   0.000             0.000
-      contacted_early  33.0          0.182      0.152   0.500             0.074
-      late_completion  44.0          0.591      0.136   0.231             0.000
- notification_failure  15.0          0.333      0.000   0.000             0.000
-    scheduled_pending   8.0          0.500      0.250   0.500             0.000
-               timely 114.0          0.140      0.088   0.500             0.020
-unacknowledged_result  52.0          0.750      0.346   0.462             0.000
- unscheduled_referral   5.0          0.400      0.200   0.500             0.000
-     upstream_failure   6.0          0.667      0.500   0.750             0.000
+              profile      n  overdue_share  flag_rate  recall  false_alert_rate
+ conflicting_evidence   92.0          0.370      0.141   0.382             0.000
+      contacted_early  366.0          0.126      0.049   0.326             0.009
+      late_completion  434.0          0.606      0.205   0.323             0.023
+   missed_appointment  121.0          0.537      0.256   0.477             0.000
+missing_documentation   48.0          0.667      0.458   0.594             0.188
+ notification_failure  236.0          0.364      0.212   0.523             0.033
+    scheduled_pending  133.0          0.624      0.436   0.675             0.040
+               timely 1458.0          0.195      0.112   0.519             0.013
+unacknowledged_result  766.0          0.631      0.311   0.476             0.028
+ unscheduled_referral   84.0          0.560      0.274   0.489             0.000
+     upstream_failure  229.0          0.672      0.384   0.571             0.000
 ```
 
 
 ### Benchmarks - ML latency
 
 ```
-                     model  batch  latency_ms_p50  latency_ms_p95  latency_ms_p99  per_row_ms_p50  rows_per_s  n_calls
-      C_graph_ml (xgboost)      1           2.884          10.340          17.976           2.884     346.699      600
-      C_graph_ml (xgboost)     16           3.863          11.981          14.849           0.241    4141.345       36
-      C_graph_ml (xgboost)     64           4.666           9.505          11.933           0.073   13715.540       15
-      C_graph_ml (xgboost)    256           6.588          15.389          19.934           0.026   38861.179       15
-B_independent_ml (xgboost)      1           2.817          14.180          23.114           2.817     354.948      600
-B_independent_ml (xgboost)     16           3.005           5.106           9.065           0.188    5324.644       36
-B_independent_ml (xgboost)     64           3.218           3.452           3.489           0.050   19887.758       15
-B_independent_ml (xgboost)    256           5.374          17.184          30.080           0.021   47634.456       15
+                model  batch  latency_ms_p50  latency_ms_p95  latency_ms_p99  per_row_ms_p50  rows_per_s  n_calls
+      C_graph_ml (rf)      1          24.512          25.256          26.919          24.512      40.796     1000
+      C_graph_ml (rf)     16          24.877          26.332          30.277           1.555     643.168       60
+      C_graph_ml (rf)     64          25.332          26.340          33.795           0.396    2526.494       25
+      C_graph_ml (rf)    256          26.964          28.489          34.899           0.105    9494.172       25
+B_independent_ml (rf)      1          24.488          25.442          27.166          24.488      40.837     1000
+B_independent_ml (rf)     16          24.274          25.111          28.547           1.517     659.129       60
+B_independent_ml (rf)     64          24.600          25.313          25.483           0.384    2601.643       25
+B_independent_ml (rf)    256          26.063          26.313          26.660           0.102    9822.318       25
 ```
 
 
@@ -293,27 +295,46 @@ B_independent_ml (xgboost)    256           5.374          17.184          30.08
 
 ```
  threads  requests  throughput_req_per_s  latency_ms_p50  latency_ms_p95  latency_ms_p99  errors
-       1        40               248.552           2.991          10.104          10.622       0
-       2        80               252.851           5.843          17.756          23.646       0
-       4       160               257.219           8.176          43.366          65.717       0
-       8       320               236.241          16.058          90.143         121.318       0
+       1        40                40.659          24.540          24.816          25.559       0
+       2        80                51.947          38.727          49.260          50.611       0
+       4       160                47.698          83.702          98.971         105.849       0
+       8       320                45.054         170.006         197.314         457.464       0
 ```
 
 
-### Benchmarks - event throughput
+### Benchmarks - event throughput (the peak_rss_mb column is dropped: in the archived runs it was the notebook kernel's lifetime peak inherited by the worker, see README)
 
 ```
- workload_events                                                          config  events_per_s   eps_min   eps_max  lat_p50_ms  lat_p95_ms  lat_p99_ms  peak_rss_mb  error_rate  runs
-            1000                                   graph+states only (in-memory)     19254.262 17821.359 20687.165       0.039       0.075       0.163     2610.605         0.0     2
-            1000                                       states+alerts (in-memory)     13086.825 12613.981 13559.669       0.051       0.170       0.512     2610.605         0.0     2
-            1000        states+alerts+ML risk (SQLite WAL, commit/200, batch 64)       354.143   334.461   373.826       0.062      11.963      26.689     2610.605         0.0     2
-            1000 states+alerts+ML risk (SQLite, per-event rescoring, commit/200)       381.836   355.618   408.053       0.111       8.668      18.225     2610.605         0.0     2
-            1000                     states+alerts+ML risk (in-memory, batch 64)       368.705   344.839   392.572       0.063      10.667      23.600     2610.605         0.0     2
-            5000                                   graph+states only (in-memory)      9592.674  8893.863 10291.486       0.040       0.091       0.172     2610.605         0.0     2
-            5000                                       states+alerts (in-memory)      6878.223  6844.665  6911.780       0.055       0.241       0.463     2610.605         0.0     2
-            5000        states+alerts+ML risk (SQLite WAL, commit/200, batch 64)       470.122   454.383   485.860       0.067       7.672      14.334     2610.605         0.0     2
-            5000 states+alerts+ML risk (SQLite, per-event rescoring, commit/200)       394.420   364.757   424.083       2.550       7.756      15.157     2610.605         0.0     2
-            5000                     states+alerts+ML risk (in-memory, batch 64)       460.374   449.640   471.108       0.068       8.008      16.228     2610.605         0.0     2
+ workload_events                                                          config  events_per_s   eps_min   eps_max  lat_p50_ms  lat_p95_ms  lat_p99_ms  error_rate  runs
+            1000                                   graph+states only (in-memory)     20621.721 20608.456 20778.232       0.039       0.073       0.136         0.0     3
+            1000                                       states+alerts (in-memory)     13638.868 13616.529 13728.939       0.051       0.159       0.323         0.0     3
+            1000        states+alerts+ML risk (SQLite WAL, commit/200, batch 64)        88.386    88.180    88.581       0.070      49.404      50.703         0.0     3
+            1000 states+alerts+ML risk (SQLite, per-event rescoring, commit/200)        67.102    66.438    67.669       0.154      49.370      50.681         0.0     3
+            1000                     states+alerts+ML risk (in-memory, batch 64)        88.566    88.463    88.829       0.072      49.408      50.196         0.0     3
+           10000                                   graph+states only (in-memory)     12730.649 12699.964 13285.833       0.032       0.091       0.154         0.0     3
+           10000                                       states+alerts (in-memory)      8027.413  7888.021  8122.205       0.039       0.236       0.445         0.0     3
+           10000        states+alerts+ML risk (SQLite WAL, commit/200, batch 64)        90.677    88.665    91.089       0.058      49.834      51.555         0.0     3
+           10000 states+alerts+ML risk (SQLite, per-event rescoring, commit/200)        67.547    66.638    68.956       0.122      50.366      57.186         0.0     3
+           10000                     states+alerts+ML risk (in-memory, batch 64)        91.257    90.483    91.295       0.058      49.690      50.836         0.0     3
+          100000                                   graph+states only (in-memory)     12396.146 12396.146 12396.146       0.032       0.126       0.434         0.0     1
+          100000        states+alerts+ML risk (SQLite WAL, commit/200, batch 64)       119.633   119.633   119.633       0.042      50.813      54.418         0.0     1
+          100000                     states+alerts+ML risk (in-memory, batch 64)       122.410   122.410   122.410       0.042      50.894      54.320         0.0     1
+```
+
+
+### Benchmarks - per-workload peak memory (VmHWM of a fresh process; scripts/bench_peak_memory.py)
+
+```
+ workload_events                                                   config  events_per_s  peak_rss_mb  rss_before_mb  peak_increase_mb  error  wall_s
+            1000                            graph+states only (in-memory)     20222.013      438.059        435.242             2.816    NaN     1.7
+            1000                                states+alerts (in-memory)     13513.073      438.391        435.242             3.148    NaN     1.6
+            1000 states+alerts+ML risk (SQLite WAL, commit/200, batch 64)        89.238      475.176        472.145             3.031    NaN    12.9
+           10000                            graph+states only (in-memory)     15006.262      469.359        435.246            34.113    NaN     2.3
+           10000                                states+alerts (in-memory)      8717.148      481.051        435.242            45.809    NaN     2.8
+           10000 states+alerts+ML risk (SQLite WAL, commit/200, batch 64)        91.780      506.914        472.234            34.680    NaN   110.7
+          100000                            graph+states only (in-memory)     13583.474      756.293        446.020           310.273    NaN     9.7
+          100000                                states+alerts (in-memory)      3186.105      825.633        446.012           379.621    NaN    33.8
+          100000 states+alerts+ML risk (SQLite WAL, commit/200, batch 64)       120.961      752.562        477.621           274.941    NaN   829.7
 ```
 
 
@@ -321,10 +342,10 @@ B_independent_ml (xgboost)    256           5.374          17.184          30.08
 
 ```
  produced  dropped  consumed  max_backlog  offered_rate_eps  produce_wall_s  ideal_produce_wall_s  total_wall_s  event_loss  loss_rate  queue_latency_ms_p50  queue_latency_ms_p95  queue_latency_ms_p99 policy                              scenario
-     1788        0      1788           11           340.857           5.243                 5.246         5.243           0      0.000                 0.528                14.466                23.497  block                  0.5x capacity, block
-     1788        0      1788          200          1363.429           2.890                 1.311         3.235           0      0.000               340.761               557.239               663.985  block     2x capacity, block (backpressure)
-     1117      671      1117          200          1363.429           1.312                 1.311         1.605         671      0.375               243.187               335.799               346.289   drop 2x capacity, drop (bounded queue 200)
-      618     1170       618          200          2726.858           0.656                 0.656         0.938        1170      0.654               294.222               386.286               392.345   drop 4x capacity, drop (bounded queue 200)
+     2000        0      2000           11            53.448          37.401                37.419        37.433           0      0.000                11.496               115.114               181.228  block                  0.5x capacity, block
+     2000        0      2000          200           213.793          17.185                 9.355        18.723           0      0.000              1949.176              2649.183              2849.305  block     2x capacity, block (backpressure)
+     1222      778      1222          200           213.793           9.350                 9.355        11.401         778      0.389              1530.154              2432.883              2500.327   drop 2x capacity, drop (bounded queue 200)
+      669     1331       669          200           427.587           4.675                 4.677         5.958        1331      0.666              1344.039              2412.777              2570.185   drop 4x capacity, drop (bounded queue 200)
 ```
 
 
@@ -332,9 +353,9 @@ B_independent_ml (xgboost)    256           5.374          17.184          30.08
 
 ```
  concurrent_requests  wall_s  throughput_req_per_s  latency_s_p50  latency_s_max                                                                                        note
-                   1   7.352                 0.136          7.351          7.351 llama.cpp context is serialised by a lock: concurrent requests queue (no parallel speed-up)
-                   2  14.552                 0.137         10.793         14.519 llama.cpp context is serialised by a lock: concurrent requests queue (no parallel speed-up)
-                   4  30.287                 0.132         18.392         30.280 llama.cpp context is serialised by a lock: concurrent requests queue (no parallel speed-up)
+                   1   2.734                 0.366          2.733          2.733 llama.cpp context is serialised by a lock: concurrent requests queue (no parallel speed-up)
+                   2   5.831                 0.343          4.348          5.830 llama.cpp context is serialised by a lock: concurrent requests queue (no parallel speed-up)
+                   4  11.647                 0.343          7.182         11.646 llama.cpp context is serialised by a lock: concurrent requests queue (no parallel speed-up)
 ```
 
 
@@ -346,26 +367,26 @@ B_independent_ml (xgboost)    256           5.374          17.184          30.08
  "model_size_mb": 378.138016,
  "threads": 2,
  "latency_s": {
-  "n": 3,
-  "mean": 9.110051768333506,
-  "p50": 9.549393952001992,
-  "p95": 9.899201179300508,
-  "p99": 9.930295155060376,
-  "max": 9.938068649000343
+  "n": 6,
+  "mean": 5.7747918709998585,
+  "p50": 5.811013364000246,
+  "p95": 6.547877221746603,
+  "p99": 6.696479633945273,
+  "max": 6.733630236994941
  },
  "tokens_per_s": {
-  "n": 3,
-  "mean": 9.220003265136205,
-  "p50": 9.215244490102029,
-  "p95": 9.64301878540437,
-  "p99": 9.681043167209022,
-  "max": 9.690549262660186
+  "n": 6,
+  "mean": 15.018568098306075,
+  "p50": 14.856513333190307,
+  "p95": 15.954624523906178,
+  "p99": 16.137537918512805,
+  "max": 16.183266267164463
  },
- "completion_tokens_mean": 83.66666666666667,
- "prompt_tokens_mean": 287.3333333333333,
- "prompt_eval_s_first_token_proxy": 1.0340809100016486,
- "peak_rss_mb": 2610.60546875,
- "load_s": 1.6205916830003844
+ "completion_tokens_mean": 86.5,
+ "prompt_tokens_mean": 282.6666666666667,
+ "prompt_eval_s_first_token_proxy": 0.6552639579967945,
+ "peak_rss_mb": 2553.20703125,
+ "load_s": 0.8417349600058515
 }
 ```
 
@@ -376,9 +397,9 @@ Hardware NNPA execution is evidenced by a successful zDNN matmul at TFLOP/s-clas
 
 ```
    M    K    N  nnpa_op_ms  nnpa_total_ms  numpy_blas_ms  cpu_naive_c_ms  speedup_op_vs_numpy  speedup_total_vs_numpy  max_abs_err  max_abs_ref
-  64   64   64       0.001          0.003          0.090           0.203               64.405                  31.092        0.005        2.668
- 256  256  256       0.012          0.043          5.793          12.584              463.464                 135.357        0.015        5.282
- 512  512  512       0.066          0.209         47.720         102.793              726.325                 227.996        0.024        8.591
-1024 1024 1024       0.487          1.148        409.962         844.267              841.465                 356.954        0.045       13.194
+  64   64   64       0.001          0.003          0.089           0.205               63.373                  27.726        0.005        2.668
+ 256  256  256       0.010          0.042          5.632          12.601              536.379                 132.830        0.015        5.282
+ 512  512  512       0.064          0.209         45.182         100.677              701.583                 215.872        0.024        8.591
+1024 1024 1024       0.487          1.148        389.405         815.646              799.763                 339.084        0.045       13.194
 ```
 

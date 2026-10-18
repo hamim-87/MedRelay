@@ -1,0 +1,42 @@
+{
+  "uname_m": "s390x",
+  "uname_a": "Linux medi 6.8.0-147-generic #147-Ubuntu SMP Thu Sep 24 10:59:43 UTC 2026 s390x s390x s390x GNU/Linux",
+  "is_s390x": true,
+  "byteorder": "big",
+  "os_release": {
+    "PRETTY_NAME": "Ubuntu 24.04.5 LTS",
+    "VERSION_ID": "24.04"
+  },
+  "nproc": 2,
+  "cpu_features": "esan3 zarch stfle msa ldisp eimm dfp edat etf3eh highgprs te vx vxd vxe gs vxe2 vxp sort dflt vxp2 nnpa sie",
+  "has_vector_facility_vx": true,
+  "has_vxe2": true,
+  "nnpa_cpu_flag": true,
+  "nnpa_facility_165_listed": true,
+  "memory_total_gb": 4.18,
+  "memory_available_gb": 2.58,
+  "disk_total_gb": 52.7,
+  "disk_free_gb": 43.2,
+  "python": "3.12.3",
+  "python_exe": "/home/linux1/medrelay-linuxone/.venv/bin/python",
+  "packages": {
+    "numpy": "1.26.4",
+    "pandas": "2.1.4",
+    "scipy": "1.11.4",
+    "sklearn": "1.4.1.post1",
+    "xgboost": "2.0.3",
+    "networkx": "2.8.8",
+    "pydantic": "2.14.1",
+    "matplotlib": "3.6.3",
+    "plotly": "5.15.0",
+    "ipywidgets": "8.1.1",
+    "llama_cpp": "0.3.36",
+    "onnx": "1.14.1",
+    "onnxruntime": null,
+    "joblib": "1.3.2",
+    "psutil": "5.9.8"
+  },
+  "docker": null,
+  "podman": null,
+  "hypervisor": "z/VM 7.3.0"
+}

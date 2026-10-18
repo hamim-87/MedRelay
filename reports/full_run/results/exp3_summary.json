@@ -1,0 +1,79 @@
+{
+  "paired": {
+    "C_minus_A": {
+      "diff": 0.0007812426454578691,
+      "lo": -0.007186629095172828,
+      "hi": 0.009522574672898394,
+      "p_diff_le_0": 0.44333333333333336,
+      "n_boot": 300
+    },
+    "C_minus_B": {
+      "diff": -0.0009937373972700447,
+      "lo": -0.00695991593550557,
+      "hi": 0.005464672411389592,
+      "p_diff_le_0": 0.5833333333333334,
+      "n_boot": 300
+    }
+  },
+  "n": {
+    "val_obligations": 2546,
+    "test_obligations": 4605,
+    "test_overdue": 1578,
+    "test_completed": 2389,
+    "test_unverified_or_censored": 638,
+    "test_patients": 812
+  },
+  "state_eval": {
+    "engine_evidence_aware": {
+      "accuracy": 0.9105320304017372,
+      "per_class_recall": {
+        "completed": 0.9832565927166178,
+        "overdue": 0.7680608365019012,
+        "not_confirmed": 0.9905956112852664
+      }
+    },
+    "engine_final_after_reconciliation": {
+      "accuracy": 0.9997828447339848,
+      "per_class_recall": {
+        "completed": 1.0,
+        "overdue": 1.0,
+        "not_confirmed": 0.9984326018808778
+      }
+    },
+    "naive_absence_is_failure": {
+      "accuracy": 0.8532030401737242,
+      "per_class_recall": {
+        "completed": 0.9840937630807869,
+        "overdue": 1.0,
+        "not_confirmed": 0.0
+      }
+    }
+  },
+  "replay_stats": {
+    "deliveries": 22767,
+    "transitions": 17058,
+    "timer_fired": 38585,
+    "alert:RESULT_NOT_ACKNOWLEDGED": 1104,
+    "alert:HIGH_RISK": 3340,
+    "alert:BLOCKED_BY_UPSTREAM": 1364,
+    "alert:DEADLINE_MISSED_CONFIRMED": 1223,
+    "alerts_resolved": 6291,
+    "late_events": 801,
+    "duplicates": 486,
+    "alert:COMPLETION_UNVERIFIED": 979,
+    "alert:CONFLICTING_EVIDENCE": 141
+  },
+  "replay_latency_ms": {
+    "p50": 0.02258099993923679,
+    "p95": 299.1349756004638,
+    "p99": 309.2095487045299
+  },
+  "integrity": {
+    "sqlite_integrity": "ok",
+    "events": 22281,
+    "event_ids_unique": true,
+    "orphan_transitions": 0,
+    "alerts": 8151,
+    "rejected": 0
+  }
+}

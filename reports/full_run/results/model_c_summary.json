@@ -1,0 +1,185 @@
+{
+  "selected": "hgb/with_demographics",
+  "prevalence_test": 0.20265921923380487,
+  "n": {
+    "train": 77554,
+    "validation": 16496,
+    "test": 16471
+  },
+  "caveats": "Brazilian public-hospital appointments (2016); attendance label only; demographic/geographic features can encode bias - the scheduling-only feature set is the recommended default; not for denying or deprioritising care",
+  "comparison": [
+    {
+      "model": "logreg/scheduling_only",
+      "features": "scheduling_only",
+      "val_pr_auc": 0.31727418070223956,
+      "test_pr_auc": 0.30182733395376204,
+      "pr_auc_ci_lo": 0.2902668872245379,
+      "pr_auc_ci_hi": 0.3177655923505137,
+      "test_roc_auc": 0.6944776665443829,
+      "test_brier": 0.14780610129773092,
+      "test_ece": 0.011838980654828798,
+      "prevalence": 0.20265921923380487,
+      "precision@top20%": 0.3130434782608696,
+      "recall@top20%": 0.42061114439784303,
+      "fit_s": 109.30289936065674
+    },
+    {
+      "model": "hgb/scheduling_only",
+      "features": "scheduling_only",
+      "val_pr_auc": 0.35020746937939273,
+      "test_pr_auc": 0.32530997570254117,
+      "pr_auc_ci_lo": 0.31068569878520697,
+      "pr_auc_ci_hi": 0.3398385939085403,
+      "test_roc_auc": 0.711551091093348,
+      "test_brier": 0.14618865297009984,
+      "test_ece": 0.0075657066294200735,
+      "prevalence": 0.20265921923380487,
+      "precision@top20%": 0.3269735690530369,
+      "recall@top20%": 0.5596165368484122,
+      "fit_s": 119.04134202003479
+    },
+    {
+      "model": "xgboost/scheduling_only",
+      "features": "scheduling_only",
+      "val_pr_auc": 0.3429898498548771,
+      "test_pr_auc": 0.3239739461642281,
+      "pr_auc_ci_lo": 0.3083821153924191,
+      "pr_auc_ci_hi": 0.3388891446900333,
+      "test_roc_auc": 0.7114619902197079,
+      "test_brier": 0.1462617623953717,
+      "test_ece": 0.006840234302418295,
+      "prevalence": 0.20265921923380487,
+      "precision@top20%": 0.33185997171145687,
+      "recall@top20%": 0.5623127621330137,
+      "fit_s": 113.14368081092834
+    },
+    {
+      "model": "logreg/with_demographics",
+      "features": "with_demographics",
+      "val_pr_auc": 0.3448508705260142,
+      "test_pr_auc": 0.326048792859397,
+      "pr_auc_ci_lo": 0.3139655427710788,
+      "pr_auc_ci_hi": 0.34223763982264466,
+      "test_roc_auc": 0.7155314433698251,
+      "test_brier": 0.1462605885884888,
+      "test_ece": 0.005744718878904176,
+      "prevalence": 0.20265921923380487,
+      "precision@top20%": 0.3500563697857948,
+      "recall@top20%": 0.372079089275015,
+      "fit_s": 117.33585500717163
+    },
+    {
+      "model": "hgb/with_demographics",
+      "features": "with_demographics",
+      "val_pr_auc": 0.38456208819697046,
+      "test_pr_auc": 0.35782726481858285,
+      "pr_auc_ci_lo": 0.3421324445632276,
+      "pr_auc_ci_hi": 0.3746186053191256,
+      "test_roc_auc": 0.73322116036711,
+      "test_brier": 0.14411547024871796,
+      "test_ece": 0.006291478022131447,
+      "prevalence": 0.20265921923380487,
+      "precision@top20%": 0.36517412935323385,
+      "recall@top20%": 0.4397843019772319,
+      "fit_s": 123.35847973823547
+    },
+    {
+      "model": "xgboost/with_demographics",
+      "features": "with_demographics",
+      "val_pr_auc": 0.3700625878232837,
+      "test_pr_auc": 0.3599249897567903,
+      "pr_auc_ci_lo": 0.34548839884619426,
+      "pr_auc_ci_hi": 0.3764537527768826,
+      "test_roc_auc": 0.7358634483717009,
+      "test_brier": 0.1436338964103968,
+      "test_ece": 0.005492098646855998,
+      "prevalence": 0.20265921923380487,
+      "precision@top20%": 0.3674972914409534,
+      "recall@top20%": 0.5080886758538047,
+      "fit_s": 114.06084442138672
+    }
+  ],
+  "subgroups": [
+    {
+      "group": "gender",
+      "level": "F",
+      "n": 10758,
+      "prevalence": 0.20961145194274028,
+      "mean_pred": 0.20352222948820672,
+      "pr_auc": 0.3676281317443986,
+      "flagged_share_top20": 0.24233128834355827
+    },
+    {
+      "group": "gender",
+      "level": "M",
+      "n": 5713,
+      "prevalence": 0.1895676527218624,
+      "mean_pred": 0.1985800691489825,
+      "pr_auc": 0.3418456132960042,
+      "flagged_share_top20": 0.24733064939611413
+    },
+    {
+      "group": "age_band",
+      "level": "0-17",
+      "n": 4028,
+      "prevalence": 0.21077457795431975,
+      "mean_pred": 0.20711897965074408,
+      "pr_auc": 0.36323365716947925,
+      "flagged_share_top20": 0.3073485600794439
+    },
+    {
+      "group": "age_band",
+      "level": "18-34",
+      "n": 3492,
+      "prevalence": 0.24054982817869416,
+      "mean_pred": 0.2325674161735345,
+      "pr_auc": 0.3883874879421836,
+      "flagged_share_top20": 0.4083619702176403
+    },
+    {
+      "group": "age_band",
+      "level": "50-64",
+      "n": 3571,
+      "prevalence": 0.1652198263791655,
+      "mean_pred": 0.17797755831915116,
+      "pr_auc": 0.2924738926102388,
+      "flagged_share_top20": 0.10333239988798656
+    },
+    {
+      "group": "age_band",
+      "level": "35-49",
+      "n": 3362,
+      "prevalence": 0.22337894110648424,
+      "mean_pred": 0.20846207632900335,
+      "pr_auc": 0.36729756464107666,
+      "flagged_share_top20": 0.2575847709696609
+    },
+    {
+      "group": "age_band",
+      "level": "65+",
+      "n": 2018,
+      "prevalence": 0.15262636273538158,
+      "mean_pred": 0.16906444558735736,
+      "pr_auc": 0.2791199151676513,
+      "flagged_share_top20": 0.0599603567888999
+    },
+    {
+      "group": "scholarship",
+      "level": "0",
+      "n": 14853,
+      "prevalence": 0.1980744630714334,
+      "mean_pred": 0.1985588969592416,
+      "pr_auc": 0.3475379848578236,
+      "flagged_share_top20": 0.22890998451491282
+    },
+    {
+      "group": "scholarship",
+      "level": "1",
+      "n": 1618,
+      "prevalence": 0.24474660074165636,
+      "mean_pred": 0.23163460033785516,
+      "pr_auc": 0.42188168604481296,
+      "flagged_share_top20": 0.3831891223733004
+    }
+  ]
+}
